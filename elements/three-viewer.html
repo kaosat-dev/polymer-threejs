@@ -1,6 +1,6 @@
-<link rel="import" href="three-import.html">
+<link rel="import" href="three-stats.html">
 
-<polymer-element name="three-viewer" extends="div" attributes="width height bg" tabindex="0">
+<polymer-element name="three-viewer" extends="div" attributes="width height bg showStats" tabindex="0">
 	<template >
 		<link rel="stylesheet" type="text/css" href="three-viewer.css">
 		<style>
@@ -8,15 +8,22 @@
 	        width: {{width}}px;
 	        height: {{height}}px;
 	        -webkit-user-select: none;
-	        border: 5px solid orange;
 	      }
 	      @host {
- border: 1px solid red;
-}
+		 border: 1px solid red;
+		
+		}
+		#wrapper
+		{
+			float:left;
+		}
 	    </style>
-		<div class="unselectable"> 
+		<div class="wrapper"> 
 			<div id="viewer" class="unselectable"></div>
-			<div id="stats"></div>
+			<template if="{{showStats}}">
+				<!--<div id="stats"></div>-->
+				<three-stats></three-stats>
+			</template>
 		</div>
 	</template>
 	<script>
@@ -25,19 +32,13 @@
 			width:320,
 			height:240,
 			bg: "#ffffff",
-			constructor: function()
-			{
-				console.log("lkjkl");
-			},
+			showStats: false,
 			ready: function() {
 				console.log("this", this.$)
 				console.log("this.size", this.width, this.height)
 				this.clock = new THREE.Clock();
 				this.init();
 				this.animate();
-				
-				//this.$.viewer.width(this.with);
-				//this.$.cs
 			},
 			init: function()
 			{
@@ -61,7 +62,8 @@
 					renderer = new THREE.WebGLRenderer( {antialias:true} );
 				else
 				*/
-				renderer = new THREE.CanvasRenderer(); 
+				renderer = new THREE.WebGLRenderer( {antialias:true} );
+				//renderer = new THREE.CanvasRenderer(); 
 				renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 				renderer.setClearColor( this.convertColor(this.bg), 1 );
 				this.$.viewer.appendChild( renderer.domElement );
@@ -95,12 +97,16 @@
 				
 				
 				// displays current and past frames per second attained by scene
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.bottom = '0px';
-				stats.domElement.style.zIndex = 100;
-				this.$.stats.appendChild( stats.domElement );
-				this.stats = stats;
+				//TODO: move this to another web component
+				/*if(this.showStats == true)
+				{
+					stats = new Stats();
+					stats.domElement.style.position = 'absolute';
+					stats.domElement.style.bottom = '0px';
+					stats.domElement.style.zIndex = 100;
+					this.$.stats.appendChild( stats.domElement );
+					this.stats = stats;
+				}*/
 				
 			},
 			animate: function() 
@@ -114,7 +120,10 @@
 				// delta = change in time since last call (in seconds)
 				var delta = this.clock.getDelta(); 
 				this.controls.update(); 
-				this.stats.update();
+				if(this.showStats == true)
+				{
+					//this.stats.update();
+				}
 			},
 			render: function() 
 			{	
@@ -134,3 +143,6 @@
 
 	</script>
 </polymer-element>
+<script src="../vendor/three/three.min.js"></script>
+<script src="../vendor/three/OrbitControls.js"></script>
+
