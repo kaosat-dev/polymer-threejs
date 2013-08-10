@@ -4,27 +4,5 @@
 	<template>
 		<div id="stats"></div>
 	</template>
-	<script>
-	Polymer('three-stats', {
-		
-		ready: function() {
-			console.log("three stats viewer started")
-			this.init();
-		},
-		init:function()
-		{
-			stats = new Stats();
-			stats.domElement.style.position = 'absolute';
-			stats.domElement.style.bottom = '0px';
-			stats.domElement.style.zIndex = 100;
-			this.$.stats.appendChild( stats.domElement );
-			this.stats = stats;
-		},
-		update:function()
-		{
-			
-		}
-		
-		  });
-	</script>
+	<script src="three-stats.js"></script>
 </polymer-element>
