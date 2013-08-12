@@ -12,19 +12,9 @@
   </head>
   <body>
     <!-- Instantiate custom element -->
-    <three-viewer bg="#fffffe" viewAngle="25" width=640 height=480 autoRotate showControls showStats></three-viewer>
-    <three-viewer bg="#ccfffe" viewAngle="90" width=320 height=240  showStats style="float:left; left:480px;border: 1px solid blue;"></three-viewer>
-    <!--<three-viewer bg="#c0ff00" viewAngle="90" width=320 height=240 autoRotate showStats></three-viewer>
-    <three-viewer bg="#cc00ee" viewAngle="90" width=320 height=240  showStats></three-viewer>
-    <three-viewer bg="#000ffe" viewAngle="90" width=320 height=240 autoRotate showStats></three-viewer>
-    
-    <visitor-creds></visitor-creds><br>
-    <visitor-creds></visitor-creds>
-    
-     <name-tag person={"name":"john","nameColor":"pink"}></name-tag>
+    <three-viewer bg="#fffffe" viewAngle="25" width=640 height=480  autoRotate showControls id="viewer1"></three-viewer>
+    <!--<three-viewer bg="#c0ff00" viewAngle="45" width=320 height=240  style="left:680px;top:500px;border: 1px solid blue;"></three-viewer>
     -->
-     
-     
     <script>
     /*
     document.body.style.opacity = 0;
@@ -33,7 +23,9 @@
 
       var threeViewer = document.querySelector('three-viewer');
       console.log("components loaded",threeViewer);
-
+      console.log("",threeViewer.autoRotate);
+      threeViewer.autoRotate = true;
+	
 	threeViewer.shadows.show=true;
 		console.log(threeViewer.shadows)
       
@@ -52,8 +44,8 @@
 		
 		//threeViewer.scene = testScene;
 		threeViewer.scene.add(sphere);
-    });
-    //={"show":true,"resolution":1024,"self":false}*/
+    });*/
+    //={"show":true,"resolution":1024,"self":false}
   </script>
   </body>
 </html>

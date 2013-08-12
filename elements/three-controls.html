@@ -1,16 +1,45 @@
-<polymer-element name="three-controls" extends="div" attributes="show" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate" tabindex="0">
+	<style>
+		table
+		{
+		border-collapse:separate;
+		border-spacing:15px 3px;
+		}
+	</style>
 	<template>
-		<div style="position: absolute; top:20px; float:right: z-index:999;" hidden?="{{!show}}"> 
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a on-click="settingsChange" rel="tooltip" title="show/hide grid" class="toggleGrid uicons"><i class="icon-table"></i></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a on-click="settingsChange" rel="tooltip" title="show/hide axes" class="toggleAxes uicons"><i class="icon-plus"></i></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a on-click="settingsChange" rel="tooltip" title="toggle shadows" class="toggleShadows uicons"><i class="icon-adjust"></i></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a on-click="settingsChange" rel="tooltip" title="toggle autoRotate" class="toggleAutoRotate uicons"><i class="icon-refresh"></i></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a on-click="settingsChange" rel="tooltip" title="toggle outlines" class="toggleOutlines uicons"><i class="icon-circle-blank"></i></a>
+		<link rel="stylesheet" type="text/css" href="three-controls.css">
+		<span class="{{uicon_off: !flag }} {{uicon_on: flag}} magic">Toto</span>
+		<div style="position: absolute; top:20px; float:right: z-index:999;" hidden?="{{!show}}">
+			<table>
+				<tr>
+					<td>
+						<input type="checkbox" name="grid" id="grid" class="grid uicons" value="kitty"rel="tooltip" title="toggle grid"/>
+						<label for="grid"></label>
+					</td>
+					<td>
+						<input type="checkbox" checked="{{ autoRotate }}" id="autoRotate" class="autoRotate uicons" rel="tooltip" title="toggle autoRotate" />
+						<label for="autoRotate"></label>
+					</td>
+					
+					<td>
+						<a on-click="settingsChange" rel="tooltip" title="show/hide axes" class="toggleAxes uicons"><i class="icon-plus"></i></a>
+					</td>
+					<td>
+						<a on-click="settingsChange" rel="tooltip" title="toggle shadows" class="toggleShadows uicons"><i class="icon-adjust"></i></a>
+					</td>
+					
+					<td>
+						<a on-click="settingsChange" rel="tooltip" title="toggle outlines" class="toggleOutlines uicons">
+							<i class="icon-circle-blank"></i>
+						</a>
+					</td>
+					<td>
+						<a on-click="settingsChange" rel="tooltip" title="toggle stats" class="toggleStats uicons">
+							<i class="icon-dashboard"></i>
+						</a>
+					</td>
+				</tr>
+			</table> 
 		</div>
 	</template>
 	<script src="three-controls.js"></script>

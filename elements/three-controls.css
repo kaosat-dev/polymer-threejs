@@ -1,0 +1,46 @@
+input[type=checkbox] {
+display:none;
+  }
+
+.uicons
+{
+	color: #50BCD0;
+	text-decoration:  none;
+}
+
+.uicons:hover
+{
+  color: #ff8900;
+}
+
+
+.uicons + label {
+	  font-family: 'FontAwesome';
+	  padding-right: 3px;
+	  font-size: 1em;
+	}
+
+.uicons + label:before 
+{
+	color: #50BCD0;
+	text-decoration:  none;
+}
+
+.uicons:hover + label:before
+{
+	  color: #ff8900;
+}
+
+.uicons:checked + label:before
+{
+	  color: #00ffa5;
+}
+
+/*Specific icons*/	
+.grid + label:before {
+	  content: "\f0ce";
+}
+
+.autoRotate  + label:before {
+	content: "\f021";
+}

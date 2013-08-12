@@ -5,12 +5,11 @@ Polymer('three-viewer', {
 		bg: "#ffffff",
 		
 		viewAngle: 40,
-		autoRotate:false,
 		projection: "perspective",
 		
 		meshStyle:'shaded',
 		meshOutlines: true,
-		
+		autoRotate:false,
 		shadows:
 		{
 			show:false,
@@ -153,15 +152,9 @@ Polymer('three-viewer', {
   		{
   			console.log("shadowsChanged", this.shadows);
   		},
-  		
-  		settingsChange: function(event, detail, sender, target) {
-  		 	console.log("settings change clicked",event,detail,sender,target)
-  		 	console.log("bla",sender.className)
-  		 	
+  		autoRotateChanged:function()
+  		{
+  			console.log("autoRotateChanged", this.autoRotate);
+  			this.controls.autoRotate = this.autoRotate;
   		}
-  		/*
-  		cornerChanged: function() {
-        this.corner ? this.$.status.classList.add('corner') :
-                      this.$.status.classList.remove('corner');
-      	},*/
   });
