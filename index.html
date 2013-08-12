@@ -22,9 +22,9 @@
 	    var threeViewer = document.querySelector('three-viewer');
 	    console.log("components loaded",threeViewer);
 	      
-		var sphereGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
-		var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
-		var cube = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		var cubeGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
+		var material = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
+		var cube = new THREE.Mesh(cubeGeometry, material);
 		cube.position.set(-25, 25, -35); 
 			
 		cube.castShadow =  true

@@ -9,7 +9,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "three": "0.58.9",
   },
   "devDependencies": {
     "http-server": "~0.5.5"
