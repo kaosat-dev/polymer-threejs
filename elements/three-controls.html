@@ -1,4 +1,4 @@
-<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows" tabindex="0">
 	<style>
 		table
 		{
@@ -13,7 +13,7 @@
 			<table>
 				<tr>
 					<td>
-						<input type="checkbox" name="grid" class="grid uicons" rel="tooltip" title="toggle grid"/>
+						<input type="checkbox" checked="{{ showGrid }}" name="grid" class="grid uicons" rel="tooltip" title="toggle grid"/>
 						<label for="grid"></label>
 					</td>
 					<td>
@@ -25,7 +25,7 @@
 						<label for="axes"></label>
 					</td>
 					<td>
-						<input type="checkbox" checked="{{ shadows }}" class="shadows uicons" rel="tooltip" title="toggle shadows" />
+						<input type="checkbox" checked="{{ showShadows }}" class="shadows uicons" rel="tooltip" title="toggle shadows" />
 						<label for="shadows"></label>
 					</td>
 					<td>

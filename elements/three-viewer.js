@@ -1,15 +1,21 @@
 Polymer('three-viewer', {
 		applyAuthorStyles: true,
+		noscript:true,
+		
 		width:320,
 		height:240,
 		bg: "#ffffff",
 		
 		viewAngle: 40,
 		projection: "perspective",
+		autoRotate:false,
 		
 		meshStyle:'shaded',
 		meshOutlines: true,
-		autoRotate:false,
+		
+		showGrid: true,
+		showShadows:true,
+		
 		shadows:
 		{
 			show:false,
@@ -41,14 +47,18 @@ Polymer('three-viewer', {
 				show:false,
 				resolution:128,
 				self:true};*/
-			this.scene=new THREE.Scene();
+			this.scene = new THREE.Scene();
 			this.clock = new THREE.Clock();
+			this.rootAssembly = new THREE.Object3D();
+			this.scene.add(this.rootAssembly); //entry point to store meshes
+			
 			this.init();
 			this.animate();
 		},
 		init: function()
 		{
 			this.setupRenderer();
+			this.setupLights();
 			this.setupScene();
 			this.setupControls();
 		},
@@ -85,9 +95,52 @@ Polymer('three-viewer', {
 			renderer = new THREE.WebGLRenderer( {antialias:true} );
 			//renderer = new THREE.CanvasRenderer(); 
 			renderer.setSize(this.width, this.height);
+			renderer.shadowMapEnabled = true;
+			renderer.shadowMapAutoUpdate = true;
+			renderer.shadowMapSoft = true;
+			renderer.shadowMapType = THREE.PCFSoftShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
+			
 			renderer.setClearColor( this.convertColor(this.bg), 1 );
 			this.$.viewer.appendChild( renderer.domElement );
 			this.renderer = renderer;
+		},
+		setupLights: function()
+		{
+			mainScene = 	this.scene
+		  	pointLight = new THREE.PointLight(0x333333,4)
+		  	pointLight.position.x = -2500
+		  	pointLight.position.y = -2500
+		  	pointLight.position.z = 2200
+			  
+		  	pointLight2 = new THREE.PointLight(0x333333,3)
+		  	pointLight2.position.x = 2500
+		  	pointLight2.position.y = 2500
+		  	pointLight2.position.z = -5200
+			
+		  	ambientColor = 0x565595
+		  	ambientLight = new THREE.AmbientLight(ambientColor)
+			  
+		  	spotLight = new THREE.SpotLight( 0xbbbbbb, 1.5)  ;  
+		  	spotLight.position.x = 50;
+		  	spotLight.position.y = 50;
+		  	spotLight.position.z = 150;
+		  	
+			spotLight.shadowCameraNear = 1;
+			spotLight.shadowCameraFov =60;
+			spotLight.shadowMapBias = 0.0039;
+			spotLight.shadowMapDarkness = 0.5;
+			shadowResolution = 512 //parseInt(@settings.shadowResolution.split("x")[0])
+			spotLight.shadowMapWidth = shadowResolution
+			spotLight.shadowMapHeight = shadowResolution
+			spotLight.castShadow = true
+			  
+			lights = [ambientLight,pointLight, pointLight2, spotLight]
+			mainScene.lights = lights
+			for (var i=0; i<lights.length; i++)
+			{
+				var light = lights[i]
+			    mainScene.add(light)
+			}
 		},
 		setupScene:function()
 		{
@@ -108,32 +161,27 @@ Polymer('three-viewer', {
 		          this.FAR);
 		
 			console.log("this.defaultCameraPosition",this.defaultCameraPosition)
-		      this.camera.up = new THREE.Vector3( 0, 0, 1 );
-		      this.camera.position.copy(this.defaultCameraPosition);
-		      this.camera.defaultPosition.copy(this.defaultCameraPosition);
+	      	this.camera.up = new THREE.Vector3( 0, 0, 1 );
+	      	this.camera.position.copy(this.defaultCameraPosition);
+	      	this.camera.defaultPosition.copy(this.defaultCameraPosition);
+		    this.scene.add(this.camera);
+		    
+			// Sphere parameters: radius, segments along width, segments along height
+			var sphereGeometry = new THREE.SphereGeometry( 25, 128, 128 ); 
+			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
+			var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+			sphere.position.set(10, 10, 30); 
+			sphere.castShadow =  true;this.showShadows
+        	sphere.receiveShadow = true; this.showShadows
+			
+			this.rootAssembly.add(sphere);
+		    
+		    //add grid
+		    this.grid = new THREE.CustomGridHelper(200,10)
+		    this.scene.add(this.grid);
+		    
+		    console.log("scene setup ok",this.scene);
 		      
-		      
-		      this.camera = new THREE.PerspectiveCamera(  this.viewAngle, ASPECT, this.NEAR, this.FAR);
-		    this.camera.position.set(defaultPosition[0],defaultPosition[1],defaultPosition[2]);
-		    this.camera.lookAt(this.scene.position);	
-		      
-		      this.scene.add(this.camera);
-		      
-
-		      // create a light
-				var light = new THREE.PointLight(0xffffff);
-				light.position.set(0,250,0);
-				this.scene.add(light);
-				var ambientLight = new THREE.AmbientLight(0x111111);
-				this.scene.add(ambientLight);
-	
-				// Sphere parameters: radius, segments along width, segments along height
-				var sphereGeometry = new THREE.SphereGeometry( 50, 32, 16 ); 
-				var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0x8888ff} ); 
-				var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-				sphere.position.set(100, 50, -50); 
-				this.scene.add(sphere);
-		      console.log("scene setup ok",this.scene);
 		},
 		setupControls: function()
 		{
@@ -148,13 +196,26 @@ Polymer('three-viewer', {
 		bgChanged: function() {
 			console.log("bg changed");
   		},
-  		shadowsChanged:function()
-  		{
-  			console.log("shadowsChanged", this.shadows);
-  		},
   		autoRotateChanged:function()
   		{
   			console.log("autoRotateChanged", this.autoRotate);
   			this.controls.autoRotate = this.autoRotate;
+  		},
+  		showGridChanged:function()
+  		{
+  			console.log("showGridChanged", this.showGrid);
+  			this.grid.toggle(this.showGrid)
+  		},
+  		showShadowsChanged:function()
+  		{
+  			console.log("showShadowsChanged", this.showShadows);
+  			this.grid.plane.receiveShadow = this.showShadows;
+  			
+  			//hack for now
+  			var settings = {};
+  			settings.shadows = this.showShadows;
+  			settings.selfShadows =this.showShadows;
+  			settings.objectViewMode = "shaded";
+  			updateVisuals(this.rootAssembly, settings);
   		}
   });

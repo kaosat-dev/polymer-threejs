@@ -6,6 +6,7 @@
  *      Use this only if you do not wish to manage
  *      both a Orthographic and Perspective Camera
  *
+ * some additional changes by kaosat-dev
  */
 
 
