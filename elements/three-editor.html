@@ -1,0 +1,19 @@
+<link rel="import" href="three-stats.html">
+<script src="../vendor/three/three.wrapped.js"></script>
+<script src="../vendor/three/CombinedCamera.js"></script>
+<script src="../vendor/three/OrbitControls.js"></script>
+
+<polymer-element name="three-viewer" extends="div" attributes="width height bg showStats viewAngle" tabindex="0">
+	<template >
+		<link rel="stylesheet" type="text/css" href="three-viewer.css">
+		<div class="wrapper"> 
+			<div id="viewer" class="unselectable"></div>
+			<template if="{{showStats}}">
+				<!--<div id="stats"></div>-->
+				<three-stats></three-stats>
+			</template>
+		</div>
+	</template>
+	<script src="three-editor.js"></script>
+</polymer-element>
+

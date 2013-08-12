@@ -1,27 +1,29 @@
 <link rel="import" href="three-stats.html">
+<link rel="import" href="three-controls.html">
+
 <script src="../vendor/three/three.wrapped.js"></script>
+<script src="../vendor/three/CombinedCamera.js"></script>
 <script src="../vendor/three/OrbitControls.js"></script>
 
-<polymer-element name="three-viewer" extends="div" attributes="width height bg showStats" tabindex="0">
-	<template >
+<polymer-element name="three-viewer" extends="div" attributes="width height bg showStats showControls viewAngle grid shadows scene autoRotate" tabindex="0">
+	<style>
+		three-viewer {
+    		opacity: 1;
+    		transition: opacity 300ms;
+    		border: 3px solid red;
+    		position: relative;
+	  }
+	  three-viewer:unresolved {
+	    opacity: 0;
+	  }
+	</style>
+	<template>
 		<link rel="stylesheet" type="text/css" href="three-viewer.css">
-		<style>
-	      #viewer {
-	        width: {{width}}px;
-	        height: {{height}}px;
-	        -webkit-user-select: none;
-	      }
-		#wrapper
-		{
-			float:left;
-		}
-	    </style>
-		<div class="wrapper"> 
-			<div id="viewer" class="unselectable"></div>
-			<template if="{{showStats}}">
-				<!--<div id="stats"></div>-->
-				<three-stats></three-stats>
-			</template>
+		<div class="wrapper" style="width:{{width}}px;height:{{height}}px;"> 
+			<div id="viewer" class="unselectable" style="position: absolute; top:0px; right:0px float:right; width:{{width}}px;height:{{height}}px "></div>
+			
+			<three-controls show="{{showControls}}"></three-controls>
+			<three-stats id="stats" show="{{showStats}}"></three-stats>
 		</div>
 	</template>
 	<script src="three-viewer.js"></script>

@@ -1,0 +1,18 @@
+<polymer-element name="three-controls" extends="div" attributes="show" tabindex="0">
+	<template>
+		<div style="position: absolute; top:20px; float:right: z-index:999;" hidden?="{{!show}}"> 
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a on-click="settingsChange" rel="tooltip" title="show/hide grid" class="toggleGrid uicons"><i class="icon-table"></i></a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a on-click="settingsChange" rel="tooltip" title="show/hide axes" class="toggleAxes uicons"><i class="icon-plus"></i></a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a on-click="settingsChange" rel="tooltip" title="toggle shadows" class="toggleShadows uicons"><i class="icon-adjust"></i></a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a on-click="settingsChange" rel="tooltip" title="toggle autoRotate" class="toggleAutoRotate uicons"><i class="icon-refresh"></i></a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a on-click="settingsChange" rel="tooltip" title="toggle outlines" class="toggleOutlines uicons"><i class="icon-circle-blank"></i></a>
+		</div>
+	</template>
+	<script src="three-controls.js"></script>
+</polymer-element>
+

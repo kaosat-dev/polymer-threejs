@@ -4,12 +4,56 @@
     <script src="vendor/polymer/polymer.min.js"></script>
     
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="font/font-awesome.css">
     <!-- Load custom element -->
     <link rel="import" href="elements/three-viewer.html">
+    <link rel="import" href="elements/test.html">
+    
   </head>
   <body>
     <!-- Instantiate custom element -->
-    <three-viewer width=700 height=320 showStats></three-viewer>
-    <three-viewer bg="#F000FF"></three-viewer>
+    <three-viewer bg="#fffffe" viewAngle="25" width=640 height=480 autoRotate showControls showStats></three-viewer>
+    <three-viewer bg="#ccfffe" viewAngle="90" width=320 height=240  showStats style="float:left; left:480px;border: 1px solid blue;"></three-viewer>
+    <!--<three-viewer bg="#c0ff00" viewAngle="90" width=320 height=240 autoRotate showStats></three-viewer>
+    <three-viewer bg="#cc00ee" viewAngle="90" width=320 height=240  showStats></three-viewer>
+    <three-viewer bg="#000ffe" viewAngle="90" width=320 height=240 autoRotate showStats></three-viewer>
+    
+    <visitor-creds></visitor-creds><br>
+    <visitor-creds></visitor-creds>
+    
+     <name-tag person={"name":"john","nameColor":"pink"}></name-tag>
+    -->
+     
+     
+    <script>
+    /*
+    document.body.style.opacity = 0;
+    window.addEventListener('WebComponentsReady', function() {
+      document.body.style.opacity = 1; // show body now that registration is done.
+
+      var threeViewer = document.querySelector('three-viewer');
+      console.log("components loaded",threeViewer);
+
+	threeViewer.shadows.show=true;
+		console.log(threeViewer.shadows)
+      
+      var creds = document.querySelector("visitor-creds");
+      console.log("cred",creds);
+      creds.person.nameColor = "blue";
+      
+      var testScene = new THREE.Scene();
+      // Sphere parameters: radius, segments along width, segments along height
+				var sphereGeometry = new THREE.CubeGeometry( 150, 150, 150 ); 
+				var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
+				var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+				sphere.position.set(-100, 50, -50); 
+				//testScene.add(sphere);
+		//testScene.camera=threeViewer.scene.camera;
+		
+		//threeViewer.scene = testScene;
+		threeViewer.scene.add(sphere);
+    });
+    //={"show":true,"resolution":1024,"self":false}*/
+  </script>
   </body>
 </html>

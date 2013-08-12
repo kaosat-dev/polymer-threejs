@@ -6,11 +6,29 @@
 -moz-user-select: none;
 -ms-user-select: none;
 user-select: none;
-
-
 }
 
-@host {
+.uicons
+{
+	color: #50BCD0;
+	text-decoration:  none;
+}
+
+.uicons:hover
+{
+  color: #ff8900;
+}
+.uicon-off
+{
+  color: #aaaaaa;
+}
+
+.uicon.on
+{
+  color: #ffaaaa;
+}
+
+#host {
 
 	div {
 		background-color:yellow;

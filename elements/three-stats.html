@@ -1,8 +1,8 @@
 <script src="../vendor/three/Stats.js"></script>
 
-<polymer-element name="three-stats" extends="div" attributes="" tabindex="0">
+<polymer-element name="three-stats" extends="div" attributes="show" tabindex="0">
 	<template>
-		<div id="stats"></div>
+		<div id="stats" hidden?="{{!show}}"></div>
 	</template>
 	<script src="three-stats.js"></script>
 </polymer-element>
