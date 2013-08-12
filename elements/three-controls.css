@@ -1,6 +1,3 @@
-input[type=checkbox] {
-display:none;
-  }
 
 .uicons
 {
@@ -43,4 +40,20 @@ display:none;
 
 .autoRotate  + label:before {
 	content: "\f021";
+}
+
+.stats + label:before{
+	content:"\f0e4";
+}
+
+.axes + label:before{
+	content: "\f055";
+}
+
+.outlines + label:before{
+  content: "\f10c";
+}
+
+.shadows + label:before{
+  content: "\f042";
 }

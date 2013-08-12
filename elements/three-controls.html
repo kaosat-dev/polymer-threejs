@@ -1,4 +1,4 @@
-<polymer-element name="three-controls" extends="div" attributes="show autoRotate" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats" tabindex="0">
 	<style>
 		table
 		{
@@ -13,30 +13,28 @@
 			<table>
 				<tr>
 					<td>
-						<input type="checkbox" name="grid" id="grid" class="grid uicons" value="kitty"rel="tooltip" title="toggle grid"/>
+						<input type="checkbox" name="grid" class="grid uicons" rel="tooltip" title="toggle grid"/>
 						<label for="grid"></label>
 					</td>
 					<td>
-						<input type="checkbox" checked="{{ autoRotate }}" id="autoRotate" class="autoRotate uicons" rel="tooltip" title="toggle autoRotate" />
+						<input type="checkbox" checked="{{ autoRotate }}" class="autoRotate uicons" rel="tooltip" title="toggle autoRotate" />
 						<label for="autoRotate"></label>
 					</td>
-					
 					<td>
-						<a on-click="settingsChange" rel="tooltip" title="show/hide axes" class="toggleAxes uicons"><i class="icon-plus"></i></a>
+						<input type="checkbox" checked="{{ showAxes }}" class="axes uicons" rel="tooltip" title="toggle axes" />
+						<label for="axes"></label>
 					</td>
 					<td>
-						<a on-click="settingsChange" rel="tooltip" title="toggle shadows" class="toggleShadows uicons"><i class="icon-adjust"></i></a>
-					</td>
-					
-					<td>
-						<a on-click="settingsChange" rel="tooltip" title="toggle outlines" class="toggleOutlines uicons">
-							<i class="icon-circle-blank"></i>
-						</a>
+						<input type="checkbox" checked="{{ shadows }}" class="shadows uicons" rel="tooltip" title="toggle shadows" />
+						<label for="shadows"></label>
 					</td>
 					<td>
-						<a on-click="settingsChange" rel="tooltip" title="toggle stats" class="toggleStats uicons">
-							<i class="icon-dashboard"></i>
-						</a>
+						<input type="checkbox" checked="{{ showOutlines }}" class="outlines uicons" rel="tooltip" title="toggle outlines" />
+						<label for="outlines"></label>
+					</td>
+					<td>
+						<input type="checkbox" checked="{{ showStats }}" class="stats uicons" rel="tooltip" title="toggle stats" />
+						<label for="stats"></label>
 					</td>
 				</tr>
 			</table> 
