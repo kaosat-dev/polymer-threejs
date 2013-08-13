@@ -1,0 +1,33 @@
+<polymer-element name="name-tag" attributes="person">
+  <template>
+    Hello! My name is <span style="color:{{person.nameColor}}">{{person.name}}</span>
+  </template>
+  <script>
+    Polymer('name-tag', {
+      ready: function() {
+        this.person = {
+          name: "Scott",
+          nameColor: "orange"
+        }
+      }
+    });
+  </script>
+</polymer-element>
+
+
+<polymer-element name="visitor-creds">
+  <template>
+    <name-tag person="{{person}}"></name-tag>
+    <span>Show?: <input type="checkbox" checked="{{ show }}" style="position: absolute;top: 0px;left: 0px"></span>
+  </template>
+  <script>
+    Polymer('visitor-creds', {
+      ready: function() {
+        this.person = {
+          name: "Scott2",
+          nameColor: "red"
+        }
+      }
+    });
+  </script>
+</polymer-element>

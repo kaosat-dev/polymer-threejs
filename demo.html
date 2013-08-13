@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="vendor/polymer/polymer.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="font/font-awesome.css">
+    
+    <!-- Load custom element -->
+    <link rel="import" href="elements/three-elements.html">
+    <link rel="import" href="elements/test.html">
+    
+  </head>
+  <body>
+    <!-- Instantiate custom element -->
+    <three-viewer  viewAngle="25" width=640 height=480  autoRotate showControls showShadows id="viewer1"></three-viewer>
+    <three-viewer bg="#c0ff00" viewAngle="45" width=320 height=240  showControls showShadows=false style="left:680px;top:500px;border: 1px solid blue;"></three-viewer>
+    <script>
+    
+    document.body.style.opacity = 0;
+    window.addEventListener('WebComponentsReady', function() {
+	    document.body.style.opacity = 1; // show body now that registration is done.
+	    var threeViewer = document.querySelector('three-viewer');
+	    console.log("components loaded",threeViewer);
+	      
+		var cubeGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
+		var material = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
+		var cube = new THREE.Mesh(cubeGeometry, material);
+		cube.position.set(-25, 25, -35); 
+			
+		cube.castShadow =  true
+	    cube.receiveShadow = true
+		threeViewer.addToScene(cube);
+		
+    });
+  </script>
+  </body>
+</html>
