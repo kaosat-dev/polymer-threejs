@@ -15,7 +15,12 @@ Polymer('three-viewer', {
 		
 		showGrid: true,
 		showShadows:true,
+		showStats: false,
+		showControls: false,
+		showAxes:true,
 		
+		//TODO: find a way to work with the following type of settings, while keeping the API simple 
+		//These are NOT used currently
 		shadows:
 		{
 			show:false,
@@ -39,8 +44,6 @@ Polymer('three-viewer', {
         	viewAngle : 40,
         	autoRotate   : false
       	},
-		showStats: false,
-		showControls: false,
 		ready: function() {
 			
 			/*this.shadows= this.shadows || {
@@ -54,6 +57,7 @@ Polymer('three-viewer', {
 			
 			this.init();
 			this.animate();
+			
 		},
 		init: function()
 		{
@@ -170,7 +174,7 @@ Polymer('three-viewer', {
 			var sphereGeometry = new THREE.SphereGeometry( 25, 128, 128 ); 
 			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
 			var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-			sphere.position.set(10, 10, 30); 
+			sphere.position.set(10, 50, 30); 
 			sphere.castShadow =  true;this.showShadows
         	sphere.receiveShadow = true; this.showShadows
 			
@@ -179,9 +183,15 @@ Polymer('three-viewer', {
 		    //add grid
 		    this.grid = new THREE.CustomGridHelper(200,10)
 		    this.scene.add(this.grid);
+		    //add axes
+		    this.axes = new THREE.LabeledAxes()
+		    this.scene.add(this.axes);
 		    
-		    console.log("scene setup ok",this.scene);
-		      
+		    /* 
+		    var t1 = new THREE.TextDrawHelper();
+		    var plane = t1.drawTextOnPlane("Hello world");
+		    this.scene.add(plane);
+		    console.log("scene setup ok",this.scene);*/
 		},
 		setupControls: function()
 		{
@@ -192,6 +202,17 @@ Polymer('three-viewer', {
 		{
 	        hex = parseInt("0x"+hex.split('#').pop(),16)
 	        return  hex 
+		},
+		addToScene: function ( object )
+		{
+			try
+			{
+				this.rootAssembly.add( object );
+			}
+			catch(error)
+			{
+				console.log("Failed to add object",object, "to scence: error", error)
+			}
 		},
 		bgChanged: function() {
 			console.log("bg changed");
@@ -217,5 +238,10 @@ Polymer('three-viewer', {
   			settings.selfShadows =this.showShadows;
   			settings.objectViewMode = "shaded";
   			updateVisuals(this.rootAssembly, settings);
+  		},
+  		showAxesChanged: function()
+  		{
+  			console.log("showAxesChanged", this.showAxes);
+  			this.axes.toggle( this.showAxes ) ;
   		}
   });

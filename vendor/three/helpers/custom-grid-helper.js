@@ -1,6 +1,7 @@
 
 
 THREE.TextDrawHelper = function () {
+	
 }
 
 THREE.TextDrawHelper.prototype.drawText = function(text, displaySize, background, scale) {
@@ -82,6 +83,8 @@ THREE.TextDrawHelper.prototype.drawTextOnPlane = function(text, size) {
   return plane;
 };
 
+//THREE.TextDrawHelper.prototype = Object.create( THREE.Object3D.prototype );
+
 
 
 THREE.CustomGridHelper = function ( size, step , color, opacity, text, textColor, textPosition) {
@@ -96,6 +99,8 @@ THREE.CustomGridHelper = function ( size, step , color, opacity, text, textColor
         textLocation: "f",
         rootAssembly: null
       };
+      THREE.Object3D.call( this );
+      
       this.size = size || 1000;
       this.step = step || 100;
       this.color = color ||  0x00baff;
@@ -106,8 +111,8 @@ THREE.CustomGridHelper = function ( size, step , color, opacity, text, textColor
       
       this.name = "grid";
       
-      THREE.Object3D.call( this );
       this._drawGrid();
+      
 };
 
 THREE.CustomGridHelper.prototype = Object.create( THREE.Object3D.prototype );
@@ -155,8 +160,8 @@ THREE.CustomGridHelper.prototype._drawGrid = function() {
       }  
       //create sub grid geometry object
       this.subGrid = new THREE.Line(subGridGeometry, subGridMaterial, THREE.LinePieces);
-      
-      
+
+		//create plane for shadow projection      
       planeGeometry = new THREE.PlaneGeometry(-size, size, 5, 5);
       planeFragmentShader = [
       "uniform vec3 diffuse;",
@@ -182,6 +187,7 @@ THREE.CustomGridHelper.prototype._drawGrid = function() {
       	"gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 - shadowColor.x );",
       	"}"
       	].join("\n");
+      	
       planeMaterial = new THREE.ShaderMaterial({
         uniforms: THREE.ShaderLib['basic'].uniforms,
         vertexShader: THREE.ShaderLib['basic'].vertexShader,
@@ -192,7 +198,7 @@ THREE.CustomGridHelper.prototype._drawGrid = function() {
       
       this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
       this.plane.rotation.x = Math.PI;
-      this.plane.position.z = -0.3;
+      this.plane.position.z = -0.8;
       this.plane.name = "workplane";
       this.plane.receiveShadow = true;
       
@@ -205,10 +211,11 @@ THREE.CustomGridHelper.prototype._drawGrid = function() {
 
 
 THREE.CustomGridHelper.prototype.toggle = function(toggle) {
-      this.visible = toggle;
-      this.mainGrid.visible = toggle;
-      this.subGrid.visible = toggle;
-      this.plane.visible = toggle;
+	
+	//apply visibility settings to all children 
+      this.traverse( function( child ) {
+      	child.visible = toggle;
+      });
 };
 
 THREE.CustomGridHelper.prototype.setOpacity = function(opacity) {
@@ -258,12 +265,13 @@ THREE.CustomGridHelper.prototype._drawNumbering = function() {
       var size = this.size;
       var step = this.step;
       
-      
-      //this fails completely in polymer.js, very weird bug:
+      //this fails completely in polymer.js, very weird bug: (in firefox aurora)
       //TypeError: Argument 6 is not valid for any of the 6-argument overloads of WebGLRenderingContext.texImage2D.
       //any attempts at rendering a texture from canvas seem to fail as well (sprite material tested as well)
-		return ;
 		      
+		/*var totot =  this.drawTextOnPlane("blabla blabla", 32);
+	  this.mainGrid.add(totot)	*/
+	  
       if (this.labels != null) {
         this.mainGrid.remove(this.labels);
       }
@@ -303,12 +311,14 @@ THREE.CustomGridHelper.prototype._drawNumbering = function() {
       }
       this.labels.add(xLabelsLeft);
       this.labels.add(yLabelsFront);
-      var labels = this.labels.children;
       
-      for (var i = 0;  i < labels.length; i++) {
-        label = labels[i];
-        label.visible = this.text;
-      }
+      //apply visibility settings to all labels
+      var textVisible = this.text;
+      this.labels.traverse( function( child  ) {
+      	child.visible = textVisible;
+      });
+      
+      
       this.mainGrid.add(this.labels);
 };
 
@@ -318,6 +328,7 @@ THREE.CustomGridHelper.prototype.drawTextOnPlane = function(text, size) {
   if (size == null) {
     size = 256;
   }
+  
   canvas = document.createElement('canvas');
   var size = 128;
   canvas.width = size;
@@ -325,24 +336,29 @@ THREE.CustomGridHelper.prototype.drawTextOnPlane = function(text, size) {
   context = canvas.getContext('2d');
   context.font = "18px sans-serif";
   context.textAlign = 'center';
-  context.fillStyle = "rgba(255, 255, 255, 0.55)";
+  context.fillStyle = this.textColor;
   context.fillText(text, canvas.width / 2, canvas.height / 2);
-  context.strokeStyle = "rgba(255, 255, 255, 0.55)";
+  context.strokeStyle = this.textColor;
   context.strokeText(text, canvas.width / 2, canvas.height / 2);
   
   texture = new THREE.Texture(canvas);
   texture.needsUpdate = true;
+      texture.generateMipmaps = true;
+      texture.magFilter = THREE.LinearFilter;
+      texture.minFilter = THREE.LinearFilter;
   
   material = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
     color: 0xffffff,
-    alphaTest: 0.2
+    alphaTest: 0.3
   });
-  
   plane = new THREE.Mesh(new THREE.PlaneGeometry(size / 8, size / 8), material);
+  plane.doubleSided = true
+  plane.overdraw = true
   
   return plane;
+  
 };
 
 

@@ -1,22 +1,26 @@
 updateVisuals = function(rootAssembly, settings) {
 	//TODO: clean up coffeescript converted code
-    var applyStyle, child, removeRenderHelpers, _i, _len, _ref, _results,
-      _this = this;
-    console.log("applying visual style to " + rootAssembly);
-    removeRenderHelpers = function(child) {
-      if (child.renderSubElementsHelper != null) {
-        child.remove(child.renderSubElementsHelper);
-        return child.renderSubElementsHelper = null;
-      }
-    };
-    applyStyle = function(child) {
-      var basicMaterial1, dashMaterial, geom, obj2, obj3, obj4, renderSubElementsHelper, subchild, wireFrameMaterial, _i, _len, _ref, _results;
-      child.castShadow = settings.shadows;
-      child.receiveShadow = settings.selfShadows && settings.shadows;
-      if (child.material != null) {
-        child.material.vertexColors = THREE.VertexColors;
-      }
-      switch (settings.objectViewMode) {
+	console.log("applying visual style to " + rootAssembly);
+
+	rootAssembly.traverse( function( child ) {
+		
+		removeRenderHelpers = function(child) {
+			//remove any visual helpers along the way
+			if (child.renderSubElementsHelper != null) {
+	        	child.remove(child.renderSubElementsHelper);
+	        	return child.renderSubElementsHelper = null;
+	      	}
+    	};
+      	
+      	//apply styling provided by settings
+      	child.castShadow = settings.shadows;
+      	child.receiveShadow = settings.selfShadows && settings.shadows;
+      	
+		if (child.material != null) {
+	        child.material.vertexColors = THREE.VertexColors;
+	    }
+
+		switch (settings.objectViewMode) {
         case "shaded":
           removeRenderHelpers(child);
           if (child.material != null) {
@@ -72,26 +76,6 @@ updateVisuals = function(rootAssembly, settings) {
             child.add(renderSubElementsHelper);
             child.renderSubElementsHelper = renderSubElementsHelper;
           }
-      }
-      _ref = child.children;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        subchild = _ref[_i];
-        if (subchild.name !== "renderSubs" && subchild.name !== "connectors") {
-          _results.push(applyStyle(subchild));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
-    if (rootAssembly != null) {
-      _ref = rootAssembly.children;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        _results.push(applyStyle(child));
-      }
-      return _results;
-    }
-  };
+      }	
+	});
+};

@@ -5,10 +5,11 @@
 <script src="../vendor/three/CombinedCamera.js"></script>
 <script src="../vendor/three/OrbitControls.js"></script>
 <script src="../vendor/three/helpers/custom-grid-helper.js"></script>
+<script src="../vendor/three/helpers/custom-axis-helper.js" ></script>
 <script src="../vendor/three/helpers/updateObjectVisuals.js"></script>
 
-
-<polymer-element name="three-viewer" extends="div" attributes="width height bg showStats showControls showShadows showGrid viewAngle autoRotate" tabindex="0">
+<polymer-element name="three-viewer" extends="div" tabindex="0"
+attributes="width height bg showStats showControls showShadows showGrid showAxes viewAngle autoRotate" >
 	<style>
 		three-viewer {
     		opacity: 1;
@@ -24,7 +25,8 @@
 		<div class="wrapper" style="width:{{width}}px;height:{{height}}px;"> 
 			<div id="viewer" class="unselectable" style="position: absolute; top:0px; right:0px float:right; width:{{width}}px;height:{{height}}px "></div>
 			
-			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}"></three-controls>
+			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" 
+			showAxes="{{showAxes}}"></three-controls>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
 		</div>
 	</template>

@@ -6,5 +6,6 @@ Polymer('three-controls', {
 			this.autoRotate = true;
 			this.showGrid = true;
 			this.showShadows = true;
+			this.showAxes = true;
 		}
 });
