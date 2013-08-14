@@ -1,12 +1,8 @@
 {
-  "name": "custom-element",
+  "name": "polymer-threejs",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "description": "three.js polymer custom elements",
+  "author": "Mark kaosat-dev Moissette",
   "license": "MIT",
   "dependencies": {
   },
