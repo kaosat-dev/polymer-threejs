@@ -30,6 +30,16 @@
 		cube.castShadow =  true
 	    cube.receiveShadow = true
 		threeViewer.addToScene(cube);
+
+		// Sphere parameters: radius, segments along width, segments along height
+		var sphereGeometry = new THREE.SphereGeometry( 25, 16, 16 ); 
+		var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
+		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+		sphere.position.set(10, 50, 30); 
+		sphere.castShadow =  true;this.showShadows
+        sphere.receiveShadow = true; this.showShadows
+			
+		threeViewer.addToScene(sphere);
 		
     });
   </script>

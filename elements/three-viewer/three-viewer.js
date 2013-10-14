@@ -92,12 +92,10 @@ Polymer('three-viewer', {
 		},
 		setupRenderer:function()
 		{
-			/*if ( Detector.webgl )
+			if ( Detector.webgl )
 				renderer = new THREE.WebGLRenderer( {antialias:true} );
 			else
-			*/
-			renderer = new THREE.WebGLRenderer( {antialias:true} );
-			//renderer = new THREE.CanvasRenderer(); 
+				renderer = new THREE.CanvasRenderer(); 
 			renderer.setSize(this.width, this.height);
 			renderer.shadowMapEnabled = true;
 			renderer.shadowMapAutoUpdate = true;
@@ -169,16 +167,6 @@ Polymer('three-viewer', {
 	      	this.camera.position.copy(this.defaultCameraPosition);
 	      	this.camera.defaultPosition.copy(this.defaultCameraPosition);
 		    this.scene.add(this.camera);
-		    
-			// Sphere parameters: radius, segments along width, segments along height
-			var sphereGeometry = new THREE.SphereGeometry( 25, 128, 128 ); 
-			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
-			var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-			sphere.position.set(10, 50, 30); 
-			sphere.castShadow =  true;this.showShadows
-        	sphere.receiveShadow = true; this.showShadows
-			
-			this.rootAssembly.add(sphere);
 		    
 		    //add grid
 		    this.grid = new THREE.CustomGridHelper(200,10)
