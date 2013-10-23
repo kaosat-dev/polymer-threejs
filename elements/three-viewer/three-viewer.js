@@ -53,18 +53,7 @@ Polymer('three-viewer', {
 			this.rootAssembly = new THREE.Object3D();
 			this.scene.add(this.rootAssembly); //entry point to store meshes
 		},
-		enableHandler: function(inEnable, inMethodName, inNode, inEventName, inCapture) {
-					var m = 'bound' + inMethodName;
-					this[m] = this[m] || this[inMethodName].bind(this);
-
-					inNode[inEnable ? 'addEventListener' : 'removeEventListener'](
-						inEventName, this[m], inCapture);
-		},
-		enableResizeHandler: function(inEnable) {
-					this.enableHandler(inEnable, 'resizeHandler', window, 
-						'resize');
-		},
-		enteredView: function() {
+    enteredView: function() {
 			console.log("entered view");
 			this.resize();
 			this.init();
@@ -76,9 +65,20 @@ Polymer('three-viewer', {
 
 		},
 		ready: function() {
-			
+			console.log("ready");
 			this.width=320;
 			this.height=240;
+		},
+		enableHandler: function(inEnable, inMethodName, inNode, inEventName, inCapture) {
+					var m = 'bound' + inMethodName;
+					this[m] = this[m] || this[inMethodName].bind(this);
+
+					inNode[inEnable ? 'addEventListener' : 'removeEventListener'](
+						inEventName, this[m], inCapture);
+		},
+		enableResizeHandler: function(inEnable) {
+					this.enableHandler(inEnable, 'resizeHandler', window, 
+						'resize');
 		},
 		init: function()
 		{
@@ -87,79 +87,7 @@ Polymer('three-viewer', {
 			this.setupScene();
 			this.setupControls();
 		},
-		resizeHandler: function() {
-			var parent =  this.parentNode.host || this.parentNode;
-			var cs = window.getComputedStyle(parent);
-			var cs = window.getComputedStyle(this);
-
-			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px",""));
-			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
-			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
-			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
-
-			console.log(" oh yeah resize",this.width,this.height);
-
-			if( window.devicePixelRatio!==null )
-			{
-        		this.dpr = window.devicePixelRatio;
-			}
-        	
-        	//#@width = Math.floor(window.innerWidth*@dpr) - (westWidth + eastWidth)
-      
-      		//BUG in firefox: dpr is not 1 on desktop, scaling issue ensue, so forcing to "1"
-      		this.dpr=1;
-			this.resUpscaler = 1;
-      		this.hRes = this.width * this.dpr * this.resUpscaler;
-      		this.vRes = this.height * this.dpr * this.resUpscaler;
-
-
-			this.camera.aspect = this.width / this.height;
-      		this.camera.setSize(this.width,this.height);
-      		this.renderer.setSize(this.hRes, this.vRes);
-      		this.camera.updateProjectionMatrix();
-
-			
-		},
-		resize:function()
-		{
-			//console.log("style", this.style, window.getComputedStyle(this));
-			//var parent = this.parentNode.host || this.parentNode;
-			var cs = window.getComputedStyle(this);
-
-			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px","")) ;
-			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
-			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
-			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
-			console.log("width",this.width,"height",this.height);
-
-			this.enableResizeHandler(true);
-
-		},
-		animate: function() 
-		{
-			this.render();		
-			this.update();
-			requestAnimationFrame(this.animate.bind(this))
-		},
-		update: function()
-		{
-			// delta = change in time since last call (in seconds)
-			var delta = this.clock.getDelta(); 
-			this.controls.update(); 
-			
-			if(this.showStats == true)
-			{
-				if(this.$.stats !== undefined)
-				{
-					this.$.stats.update();
-				}
-			}
-		},
-		render: function() 
-		{	
-			this.renderer.render( this.scene, this.camera );
-		},
-		setupRenderer:function()
+    setupRenderer:function()
 		{
 			if ( Detector.webgl )
 				renderer = new THREE.WebGLRenderer( {antialias:true} );
@@ -254,6 +182,80 @@ Polymer('three-viewer', {
 		{
 			this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
 			this.controls.autoRotate = this.autoRotate;	
+		},
+		resizeHandler: function() {
+			var parent =  this.parentNode.host || this.parentNode;
+			var cs = window.getComputedStyle(parent);
+			var cs = window.getComputedStyle(this);
+
+			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px",""));
+			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
+      console.log("heightReduct",heightReduct);
+			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
+			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
+
+			console.log(" oh yeah resize",this.width,this.height);
+
+			if( window.devicePixelRatio!==null )
+			{
+        		this.dpr = window.devicePixelRatio;
+			}
+        	
+    	//#@width = Math.floor(window.innerWidth*@dpr) - (westWidth + eastWidth)
+      
+      //BUG in firefox: dpr is not 1 on desktop, scaling issue ensue, so forcing to "1"
+      this.dpr=1;
+			this.resUpscaler = 1;
+      this.hRes = this.width * this.dpr * this.resUpscaler;
+      this.vRes = this.height * this.dpr * this.resUpscaler;
+
+			this.camera.aspect = this.width / this.height;
+  		this.camera.setSize(this.width,this.height);
+  		this.renderer.setSize(this.hRes, this.vRes);
+  		this.camera.updateProjectionMatrix();
+			
+		},
+		resize:function()
+		{
+			//console.log("style", this.style, window.getComputedStyle(this));
+			//var parent = this.parentNode.host || this.parentNode;
+			var cs = window.getComputedStyle(this);
+      console.log("TEST width",this.impl.clientWidth,"height", this.impl.clientHeight,this.style);
+
+			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px","")) ;
+			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
+			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
+			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
+			console.log("width",this.width,"height",this.height);
+      
+      
+
+			this.enableResizeHandler(true);
+
+		},
+		animate: function() 
+		{
+			this.render();		
+			this.update();
+			requestAnimationFrame(this.animate.bind(this))
+		},
+		update: function()
+		{
+			// delta = change in time since last call (in seconds)
+			var delta = this.clock.getDelta(); 
+			this.controls.update(); 
+			
+			if(this.showStats == true)
+			{
+				if(this.$.stats !== undefined)
+				{
+					this.$.stats.update();
+				}
+			}
+		},
+		render: function() 
+		{	
+			this.renderer.render( this.scene, this.camera );
 		},
 		convertColor: function(hex)
 		{

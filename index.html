@@ -7,17 +7,15 @@
     
     <!-- Load custom element -->
     <link rel="import" href="elements/three-elements.html">
-    <link rel="import" href="elements/test.html">
-    
   </head>
   <body style="min-height: 100%">
 
 	<!--<div style="height:100%;background-color:red">Test</div>-->
     <!-- Instantiate custom element -->
 
-	<three-viewer  viewAngle="25" autoRotate showControls showShadows id="viewer1" style="width:100%;height:200px;"></three-viewer>
-    <!-- <three-viewer  viewAngle="25" width=640 height=480  autoRotate showControls showShadows id="viewer1"></three-viewer>-->
+    <three-viewer  viewAngle="25" autoRotate showControls showShadows id="viewer1" style="width:100%;height:200px;"></three-viewer>
     <three-viewer bg="#c0ff00" viewAngle="45" showControls showShadows=false style="left:680px;top:300px;border: 1px solid blue;width:320px; height:240px"></three-viewer>
+    <three-editor showControls style="left:20px;top:300px;border: 1px solid red;width:320px;height:300px"> </three-editor>
     <script>
     
     document.body.style.opacity = 0;
