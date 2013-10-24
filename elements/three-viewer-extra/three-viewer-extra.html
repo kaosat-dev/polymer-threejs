@@ -6,8 +6,8 @@
 <polymer-element name="three-viewer-extra" extends="three-viewer" attributes="showControls" >
 	<template>
 		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
-		<div class="wrapper" class="unselectable" > 
-			<div id="viewer" class="unselectable" ></div>
+		<div class="wrapper" touch-action="none" on-pointermove="pointerMove"> 
+			<div id="viewer"></div>
 			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" 
 			showAxes="{{showAxes}}" on-capture-request="captureRequest"></three-controls>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>

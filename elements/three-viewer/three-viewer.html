@@ -15,7 +15,7 @@
 <polymer-element name="three-viewer" extends="div" tabindex="0" attributes="width height bg showStats showControls showShadows showGrid showAxes viewAngle autoRotate" >
 	<template>
 		<link rel="stylesheet" type="text/css" href="three-viewer.css">
-		<div class="wrapper"> 
+		<div class="wrapper" touch-action="none" on-pointermove="pointerMove"> 
 			<div id="viewer"></div>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
 		</div>

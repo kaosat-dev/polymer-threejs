@@ -242,7 +242,7 @@ function SelectionHelper(options) {
     intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
     if (intersects.length > 0) {
       if (intersects[0].object !== this.currentHover) {
-        if (intersects[0].object.name !== "workplane") {
+        if (intersects[0].object.name !== "workplane" && intersects[0].object.name !== "hoverOutline") {
           this._unHover();
           return this._onHover(intersects[0].object);
         }

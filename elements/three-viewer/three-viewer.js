@@ -51,7 +51,6 @@ Polymer('three-viewer', {
 			this.scene = new THREE.Scene();
 			this.clock = new THREE.Clock();
 			this.rootAssembly = new THREE.Object3D();
-			this.scene.add(this.rootAssembly); //entry point to store meshes
 		},
     enteredView: function() {
 			console.log("entered view");
@@ -59,15 +58,11 @@ Polymer('three-viewer', {
 			this.init();
 			this.animate();
 
-			 this.async(function() {
-        		this.setInitialStyle();
-      	});
-
 		},
 		ready: function() {
 			console.log("ready");
-			this.width=320;
-			this.height=240;
+			//this.width=320;
+			//this.height=240;
 		},
 		enableHandler: function(inEnable, inMethodName, inNode, inEventName, inCapture) {
 					var m = 'bound' + inMethodName;
@@ -87,7 +82,10 @@ Polymer('three-viewer', {
 			this.setupScene();
 			this.setupControls();
 			
-			//move this ??
+			//move these ???
+      this.scene.add(this.rootAssembly); //entry point to store meshes
+
+
 			this.selectionHelper = new SelectionHelper({camera:this.camera,color:0x000000,textColor:0xffffff})
       /*@selectionHelper.addEventListener( 'selected',  @onObjectSelected)
       @selectionHelper.addEventListener( 'unselected', @onObjectUnSelected)*/
@@ -100,7 +98,7 @@ Polymer('three-viewer', {
     setupRenderer:function()
 		{
 			if ( Detector.webgl )
-				renderer = new THREE.WebGLRenderer( {antialias:true} );
+				renderer = new THREE.WebGLRenderer( {antialias:true,preserveDrawingBuffer:true} );
 			else
 				renderer = new THREE.CanvasRenderer(); 
 			renderer.setSize(this.width, this.height);
@@ -204,7 +202,7 @@ Polymer('three-viewer', {
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
 
-			//console.log(" oh yeah resize",this.width,this.height);
+			console.log(" oh yeah resize",this.width,this.height);
 
 			if( window.devicePixelRatio!==null )
 			{
@@ -219,10 +217,16 @@ Polymer('three-viewer', {
       this.hRes = this.width * this.dpr * this.resUpscaler;
       this.vRes = this.height * this.dpr * this.resUpscaler;
 
-			this.camera.aspect = this.width / this.height;
+			/*this.camera.aspect = this.width / this.height;
   		this.camera.setSize(this.width,this.height);
   		this.renderer.setSize(this.hRes, this.vRes);
-  		this.camera.updateProjectionMatrix();
+  		this.camera.updateProjectionMatrix();*/
+
+      
+			this.camera.aspect = this.width / this.height;
+			this.camera.updateProjectionMatrix();
+
+			this.renderer.setSize( this.width,this.height );
 			
 		},
 		setInitialStyle:function()
@@ -234,8 +238,7 @@ Polymer('three-viewer', {
 			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
-			//console.log("width",this.width,"height",this.height);
-      
+			console.log("width",this.width,"height",this.height);
 			
 			//setup backround color
 			this.bg = cs.getPropertyValue("background-color");
@@ -280,6 +283,7 @@ Polymer('three-viewer', {
 			try
 			{
 				this.rootAssembly.add( object );
+        //this.scene.add(object);
 			}
 			catch(error)
 			{
@@ -329,8 +333,50 @@ Polymer('three-viewer', {
 		},
 		onObjectHover:function()
 		{
-      this.render()
+      //this.render()
 			console.log("object hover");
+    },
+    pointerMove:function(event)
+    {
+      //TODO: bingo ! the issue with picking comes from auto rotate!  why ?? investigate !
+      //console.log("I moved",event);
+      var x = event.impl.offsetX;
+      var y = event.impl.offsetY;
+      //console.log("x",x,"y",y);
+
+      /*var mouse = {};
+      mouse.x = ( event.impl.clientX / this.width ) * 2 - 1;
+			mouse.y = - ( event.impl.clientY / this.height ) * 2 + 1;*/
+
+      var intersects, projector, raycaster, v;
+      v = new THREE.Vector3((x / this.width) * 2 - 1, -(y / this.height) * 2 + 1, 1);
+      //bug somewhere : values of v seem correct (map to -1.0->1.0 in both directions, so perhaps camera issue?
+      console.log("v",x,y, this.width, this.height);
+      /*
+      projector = new THREE.Projector();
+      projector.unprojectVector(v, this.camera);
+      raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
+      
+      intersects = raycaster.intersectObjects( this.scene.children, true );// raycaster.intersectObjects(this.rootAssembly, true);     
+      //console.log(intersects);
+      if (intersects.length > 0) {
+       // console.log("intersects!!");
+      }*/
+
+      //var pointer = this.pointers[event.pointerId];
+      //todo: normalize event ? 
+      
+      //this.camera.setSize(this.width,this.height);//attempt
+      //this.selectionHelper.camera = this.camera;
+
+      this.selectionHelper.hiearchyRoot=this.rootAssembly.children;
+      this.selectionHelper.viewWidth=this.width;
+      this.selectionHelper.viewHeight=this.height;
+      this.selectionHelper.highlightObjectAt(x,y);
+
+      //var currentObj = this.selectionHelper.getObjectAt(x,y)
+      //console.log("currentObj",currentObj,this.rootAssembly);
+
     }
 
   });
