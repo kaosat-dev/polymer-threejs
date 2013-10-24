@@ -60,8 +60,8 @@ Polymer('three-viewer', {
 			this.animate();
 
 			 this.async(function() {
-          		this.setInitialStyle();
-        	});
+        		this.setInitialStyle();
+      	});
 
 		},
 		ready: function() {
@@ -86,6 +86,16 @@ Polymer('three-viewer', {
 			this.setupLights();
 			this.setupScene();
 			this.setupControls();
+			
+			//move this ??
+			this.selectionHelper = new SelectionHelper({camera:this.camera,color:0x000000,textColor:0xffffff})
+      /*@selectionHelper.addEventListener( 'selected',  @onObjectSelected)
+      @selectionHelper.addEventListener( 'unselected', @onObjectUnSelected)*/
+      this.selectionHelper.addEventListener( 'hoverIn', this.onObjectHover);
+      this.selectionHelper.addEventListener( 'hoverOut', this.onObjectHover);
+			
+			this.selectionHelper.hiearchyRoot=this.rootAssembly;
+
 		},
     setupRenderer:function()
 		{
@@ -286,7 +296,7 @@ Polymer('three-viewer', {
 			}
 			captureScreen(callback, this.renderer.domElement, width, height);
 		},
-		//attribute change handlers
+		//attribute change handlers / various handlers
 		bgChanged: function() {
 			console.log("bg changed");
   	},
@@ -316,5 +326,11 @@ Polymer('three-viewer', {
 		{
 			console.log("showAxesChanged", this.showAxes);
 			this.axes.toggle( this.showAxes ) ;
-		}
+		},
+		onObjectHover:function()
+		{
+      this.render()
+			console.log("object hover");
+    }
+
   });

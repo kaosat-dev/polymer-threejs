@@ -10,12 +10,13 @@
 <script src="./vendor/helpers/updateObjectVisuals.js"></script>
 
 <script src="./vendor/helpers/screen-capture.js"></script>
+<script src="./vendor/helpers/selection-helper.js"></script>
 
 <polymer-element name="three-viewer" extends="div" tabindex="0" attributes="width height bg showStats showControls showShadows showGrid showAxes viewAngle autoRotate" >
 	<template>
 		<link rel="stylesheet" type="text/css" href="three-viewer.css">
-		<div class="wrapper" class="unselectable" > 
-			<div id="viewer" class="unselectable" ></div>
+		<div class="wrapper"> 
+			<div id="viewer"></div>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
 		</div>
 	</template>
