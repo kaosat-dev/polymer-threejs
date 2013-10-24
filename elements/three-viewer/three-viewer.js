@@ -2,7 +2,7 @@ Polymer('three-viewer', {
 		applyAuthorStyles: true,
 		noscript:true,
 		
-		bg: "#ffffff",
+		bg: "rgb(255, 255, 255)",
 		
 		viewAngle: 40,
 		projection: "perspective",
@@ -55,12 +55,12 @@ Polymer('three-viewer', {
 		},
     enteredView: function() {
 			console.log("entered view");
-			this.resize();
+			this.setInitialStyle();
 			this.init();
 			this.animate();
 
 			 this.async(function() {
-          		this.resize();
+          		this.setInitialStyle();
         	});
 
 		},
@@ -99,7 +99,8 @@ Polymer('three-viewer', {
 			renderer.shadowMapSoft = true;
 			renderer.shadowMapType = THREE.PCFSoftShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
 			
-			renderer.setClearColor( this.convertColor(this.bg), 1 );
+			this.convertColor(this.bg)
+			renderer.setClearColor( this.bg, 1 );
 			this.$.viewer.appendChild( renderer.domElement );
 			this.renderer = renderer;
 		},
@@ -190,11 +191,10 @@ Polymer('three-viewer', {
 
 			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px",""));
 			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
-      console.log("heightReduct",heightReduct);
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
 
-			console.log(" oh yeah resize",this.width,this.height);
+			//console.log(" oh yeah resize",this.width,this.height);
 
 			if( window.devicePixelRatio!==null )
 			{
@@ -215,20 +215,21 @@ Polymer('three-viewer', {
   		this.camera.updateProjectionMatrix();
 			
 		},
-		resize:function()
+		setInitialStyle:function()
 		{
+			//setup width & height
 			//console.log("style", this.style, window.getComputedStyle(this));
-			//var parent = this.parentNode.host || this.parentNode;
 			var cs = window.getComputedStyle(this);
-      console.log("TEST width",this.impl.clientWidth,"height", this.impl.clientHeight,this.style);
-
 			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px","")) ;
 			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
-			console.log("width",this.width,"height",this.height);
+			//console.log("width",this.width,"height",this.height);
       
-      
+			
+			//setup backround color
+			this.bg = cs.getPropertyValue("background-color");
+			console.log("background color", this.bg);
 
 			this.enableResizeHandler(true);
 
@@ -257,11 +258,13 @@ Polymer('three-viewer', {
 		{	
 			this.renderer.render( this.scene, this.camera );
 		},
+		//utilities
 		convertColor: function(hex)
 		{
 	        hex = parseInt("0x"+hex.split('#').pop(),16)
 	        return  hex 
 		},
+		//public api
 		addToScene: function ( object )
 		{
 			try
@@ -273,34 +276,45 @@ Polymer('three-viewer', {
 				console.log("Failed to add object",object, "to scence: error", error)
 			}
 		},
+		captureScreen:function(callback, width, height)
+		{
+			var width = width || 640;
+			var height = height || 480;
+			if(callback === undefined)
+			{
+				throw new Error("no callback provided");
+			}
+			captureScreen(callback, this.renderer.domElement, width, height);
+		},
+		//attribute change handlers
 		bgChanged: function() {
 			console.log("bg changed");
-  		},
-  		autoRotateChanged:function()
-  		{
-  			console.log("autoRotateChanged", this.autoRotate);
-  			this.controls.autoRotate = this.autoRotate;
-  		},
-  		showGridChanged:function()
-  		{
-  			console.log("showGridChanged", this.showGrid);
-  			this.grid.toggle(this.showGrid)
-  		},
-  		showShadowsChanged:function()
-  		{
-  			console.log("showShadowsChanged", this.showShadows);
-  			this.grid.plane.receiveShadow = this.showShadows;
-  			
-  			//hack for now
-  			var settings = {};
-  			settings.shadows = this.showShadows;
-  			settings.selfShadows =this.showShadows;
-  			settings.objectViewMode = "shaded";
-  			updateVisuals(this.rootAssembly, settings);
-  		},
-  		showAxesChanged: function()
-  		{
-  			console.log("showAxesChanged", this.showAxes);
-  			this.axes.toggle( this.showAxes ) ;
-  		}
+  	},
+  	autoRotateChanged:function()
+		{
+			console.log("autoRotateChanged", this.autoRotate);
+			this.controls.autoRotate = this.autoRotate;
+		},
+		showGridChanged:function()
+		{
+			console.log("showGridChanged", this.showGrid);
+			this.grid.toggle(this.showGrid)
+		},
+		showShadowsChanged:function()
+		{
+			console.log("showShadowsChanged", this.showShadows);
+			this.grid.plane.receiveShadow = this.showShadows;
+			
+			//hack for now
+			var settings = {};
+			settings.shadows = this.showShadows;
+			settings.selfShadows =this.showShadows;
+			settings.objectViewMode = "shaded";
+			updateVisuals(this.rootAssembly, settings);
+		},
+		showAxesChanged: function()
+		{
+			console.log("showAxesChanged", this.showAxes);
+			this.axes.toggle( this.showAxes ) ;
+		}
   });

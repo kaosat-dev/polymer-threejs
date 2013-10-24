@@ -1,3 +1,17 @@
+@host {
+	* {
+		opacity: 1;
+    transition: opacity 300ms;
+    position: absolute;
+		overflow:hidden;
+		background-color:#fff;
+	}
+
+	*:unresolved {
+	    opacity: 0;
+	 }
+}
+
 .unselectable
 {
   -webkit-touch-callout: none;
@@ -8,9 +22,3 @@
 user-select: none;
 }
 
-#host {
-
-	div {
-		background-color:yellow;
-	}
-}
