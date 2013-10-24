@@ -7,5 +7,8 @@ Polymer('three-controls', {
 			this.showGrid = true;
 			this.showShadows = true;
 			this.showAxes = true;
+		},
+		onCapture:function(){
+			this.fire("capture-request");
 		}
 });

@@ -1,0 +1,21 @@
+<link rel="import" href="../three-viewer/three-viewer.html">
+<link rel="import" href="../three-stats/three-stats.html">
+<link rel="import" href="../three-controls/three-controls.html">
+
+
+<polymer-element name="three-viewer-extra" extends="three-viewer" attributes="showControls" >
+	<template>
+		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
+		<div class="wrapper" class="unselectable" > 
+			<div id="viewer" class="unselectable" ></div>
+			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" 
+			showAxes="{{showAxes}}" on-capture-request="captureRequest"></three-controls>
+			<three-stats id="stats" show="{{showStats}}"></three-stats>
+
+			<!--for downloads-->
+			<a style="position:absolute;top:10px;" id="downloadAutoLink" title="Test.png"> sdfsdf</a>
+		</div>
+	</template>
+	<script src="three-viewer-extra.js"></script>
+</polymer-element>
+

@@ -10,40 +10,80 @@
   </head>
   <body style="min-height: 100%">
 
-	<!--<div style="height:100%;background-color:red">Test</div>-->
-    <!-- Instantiate custom element -->
-
+    <!-- Instantiate custom elements -->
     <three-viewer  viewAngle="25" autoRotate showControls showShadows id="viewer1" style="width:100%;height:200px;"></three-viewer>
-    <three-viewer bg="#c0ff00" viewAngle="45" showControls showShadows=false style="left:680px;top:300px;border: 1px solid blue;width:320px; height:240px"></three-viewer>
+    <three-viewer-extra viewAngle="45" showControls showShadows=false style="left:680px;top:300px;border: 1px solid blue;width:320px; height:240px; background-color:#c0ff00"></three-viewer-extra>
     <three-editor showControls style="left:20px;top:300px;border: 1px solid red;width:320px;height:300px"> </three-editor>
-    <script>
-    
+
+		<polymer-element name="href-download" attributes="fileName fileContent" >
+
+			<template>
+					<!--for downloads-->
+					<style>
+						@host{
+							* {
+								display:block;
+							}
+						}
+					</style>
+					<input type="button" value="download file" on-click="startDownload"/>
+					<a style="position:absolute;top:10px;" id="downloadAutoLink" title="{{fileName}}"></a>
+			</template>
+			<script>
+				Polymer('href-download', {
+				fileName: "dummy.txt",
+				fileContent: "foobar",
+				startDownload:function()
+				{
+					var bb = new Blob([this.fileContent], {type: 'text/plain'});
+					var link = this.$.downloadAutoLink.impl;
+					link.download = this.fileName;
+					link.href = window.URL.createObjectURL(bb);
+					link.click();
+				}
+			});
+			</script>
+		</polymer-element>
+
+		<href-download style="position:absolute;left:180px;top:500px"> </href-download>
+
+	<script>
     document.body.style.opacity = 0;
     window.addEventListener('WebComponentsReady', function() {
 	    document.body.style.opacity = 1; // show body now that registration is done.
-	    var threeViewer = document.querySelector('three-viewer');
-	    console.log("components loaded",threeViewer);
-	    
-		var cubeGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
-		var material = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
-		var cube = new THREE.Mesh(cubeGeometry, material);
-		cube.position.set(-25, 25, -35); 
-			
-		//cube.castShadow =  true
-	    //cube.receiveShadow = true
-		threeViewer.addToScene(cube);
-
-
-		// Sphere parameters: radius, segments along width, segments along height
-		var sphereGeometry = new THREE.SphereGeometry( 25, 16, 16 ); 
-		var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
-		var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-		sphere.position.set(10, 50, 30); 
-		sphere.castShadow =  true;this.showShadows
-        sphere.receiveShadow = true; this.showShadows
-			
-		threeViewer.addToScene(sphere);
 		
+			
+			//Adding objects to scene
+	    var threeViewer = document.querySelector('three-viewer-extra');
+	    //console.log("components loaded",threeViewer);
+	    
+			var cubeGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
+			var material = new THREE.MeshLambertMaterial( {color: 0x0088ff} ); 
+			var cube = new THREE.Mesh(cubeGeometry, material);
+			cube.position.set(-25, 25, -35); 
+			
+			//cube.castShadow =  true
+			  //cube.receiveShadow = true
+			threeViewer.addToScene(cube);
+
+			// Sphere parameters: radius, segments along width, segments along height
+			var sphereGeometry = new THREE.SphereGeometry( 25, 16, 16 ); 
+			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xff2233} ); 
+			var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+			sphere.position.set(10, 50, 30); 
+			sphere.castShadow =  true;this.showShadows
+		      sphere.receiveShadow = true; this.showShadows
+			
+			threeViewer.addToScene(sphere);
+
+			//do a sceencap of the current viewer: callback gets called with a data url img 
+			function screenCapDone(imgData)
+			{
+				//imgData contains the "data:image" (encoded image data)
+				//console.log("imgData",imgData);
+			}
+			threeViewer.captureScreen(screenCapDone);
+
     });
   </script>
   </body>
