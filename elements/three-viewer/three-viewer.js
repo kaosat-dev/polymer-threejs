@@ -16,6 +16,10 @@ Polymer('three-viewer', {
 		showStats: false,
 		showControls: false,
 		showAxes:true,
+
+    //for interactions, perhaps move this to a different component
+    selectedObject:null,
+    highlightedObject : null,
 		
 		//TODO: find a way to work with the following type of settings, while keeping the API simple 
 		//These are NOT used currently
@@ -92,7 +96,7 @@ Polymer('three-viewer', {
       this.selectionHelper.addEventListener( 'hoverIn', this.onObjectHover);
       this.selectionHelper.addEventListener( 'hoverOut', this.onObjectHover);
 			
-			this.selectionHelper.hiearchyRoot=this.rootAssembly;
+			this.selectionHelper.hiearchyRoot=this.rootAssembly.children;
 
 		},
     setupRenderer:function()
@@ -331,6 +335,14 @@ Polymer('three-viewer', {
 			console.log("showAxesChanged", this.showAxes);
 			this.axes.toggle( this.showAxes ) ;
 		},
+    highlightedObjectChanged:function()
+    {
+      console.log("highlighted object changed",this.highlightedObject);
+    },
+    selectedObjectChanged:function()
+    {
+       console.log("SELECTED object changed",this.selectedObject);
+    },
 		onObjectHover:function()
 		{
       //this.render()
@@ -351,7 +363,7 @@ Polymer('three-viewer', {
       var intersects, projector, raycaster, v;
       v = new THREE.Vector3((x / this.width) * 2 - 1, -(y / this.height) * 2 + 1, 1);
       //bug somewhere : values of v seem correct (map to -1.0->1.0 in both directions, so perhaps camera issue?
-      console.log("v",x,y, this.width, this.height);
+      //console.log("v",x,y, this.width, this.height);
       /*
       projector = new THREE.Projector();
       projector.unprojectVector(v, this.camera);
@@ -369,14 +381,101 @@ Polymer('three-viewer', {
       //this.camera.setSize(this.width,this.height);//attempt
       //this.selectionHelper.camera = this.camera;
 
-      this.selectionHelper.hiearchyRoot=this.rootAssembly.children;
+      //this.selectionHelper.hiearchyRoot=this.rootAssembly.children;//NOT NEEDED ! already has a pointer to the correct data
       this.selectionHelper.viewWidth=this.width;
       this.selectionHelper.viewHeight=this.height;
       this.selectionHelper.highlightObjectAt(x,y);
 
-      //var currentObj = this.selectionHelper.getObjectAt(x,y)
+      var currentObj = this.selectionHelper.getObjectAt(x,y);
+      this.highlightedObject = currentObj;
       //console.log("currentObj",currentObj,this.rootAssembly);
+    },
+    pointerDown:function(event)
+    {
+        console.log("pointer down");
+        var x = event.impl.offsetX;
+        var y = event.impl.offsetY;
 
+        this._actionInProgress = false;
+        this._pushStart = new Date().getTime();
+      
+       /*#timer to ensure we don't unselect things 
+      if @controlChangeTimeOut?
+        clearTimeout(@controlChangeTimeOut)
+      
+      @actionInProgress = true
+      @pushStart = new Date().getTime()
+      @oldX = x
+      @oldY = y
+      @controlChangeTimeOut = null  
+      @controlChangeTimeOut = setTimeout ( =>
+        @noControlChange = true
+            
+      ), 600
+      
+      event.preventDefault()
+      return false
+      */
+
+    },
+    pointerUp:function(event)
+    {
+        console.log("pointer up");
+        var x = event.impl.offsetX;
+        var y = event.impl.offsetY;
+
+        this._actionInProgress = false;
+
+        var _pushEnd = new Date().getTime()
+        var _elapsed = _pushEnd - this._pushStart;
+
+
+        console.log( "elapsed", _elapsed );
+        if(_elapsed <= 125)
+        {
+          //simple, fast click
+          console.log("simple, fast click");
+          this._longAction = false;
+        }
+        else
+        {
+          console.log("long click/move etc");
+          this._longAction = true;
+        }
+
+        //hiearchyRoot = if @assembly? then @assembly.children else @scene.children
+        this.selectionHelper.viewWidth=this.width;
+        this.selectionHelper.viewHeight=this.height;
+        var selected = this.selectionHelper.getObjectAt(x,y);
+
+        console.log("selected",selected);
+      
+        if( selected != null && selected != undefined)
+        {
+          console.log("PROUT");
+          this.selectionHelper.selectObjectAt(x,y)
+          /*if( this.selectedObject  == null || this.selectedObject == undefined)
+          {*/
+              this.selectedObject = selected
+          /*}
+          else
+          {
+            oldSelect = @currentSelection
+            @currentSelection = selected
+            @trigger("selectionChange",oldSelect,@currentSelection)*/
+        }
+        else
+        {
+          if (this._longAction == false)
+          {
+            this.selectedObject = null;
+            
+            //@trigger("selectionChange",@currentSelection,null)
+            //@selectionHelper._unSelect()
+            //@onObjectUnSelected()
+            //@currentSelection = null 
+          }
+        }
     }
 
   });

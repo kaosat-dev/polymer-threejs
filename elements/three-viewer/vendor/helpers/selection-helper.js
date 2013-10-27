@@ -90,13 +90,18 @@ function SelectionHelper(options) {
     var outline, outlineMaterial;
     this._unHover();
     this.currentSelect = selection;
-    new BoundingCage({
+    /*new BoundingCage({
       mesh: selection,
       color: this.options.color,
       textColor: this.options.textColor
-    });
+    });*/
+
+    var cage = new THREE.BoundingBoxHelper( selection,0xFF0000 );
+    selection.cage = cage;
+    selection.add(cage);
+
     outlineMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffc200,
+      color: 0xff0000,//0xffc200,
       side: THREE.BackSide
     });
     outline = new THREE.Mesh(selection.geometry.clone(), outlineMaterial);
