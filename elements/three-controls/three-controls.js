@@ -7,6 +7,7 @@ Polymer('three-controls', {
 			this.showGrid = true;
 			this.showShadows = true;
 			this.showAxes = true;
+			this.projection = "perspective";
 		},
 		onCapture:function(){
 			this.fire("capture-request");

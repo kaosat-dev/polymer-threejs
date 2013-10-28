@@ -186,6 +186,45 @@ function SelectionHelper(options) {
     }
   };
 
+
+
+	SelectionHelper.prototype.pick = function(x,y,isOrtho){
+		var isOrtho = isOrtho || false;
+		var intersected, intersects, raycaster, v, _ref;
+
+		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
+		if( !isOrtho)
+		{
+		  this.projector.unprojectVector(v, this.camera);
+		  raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
+		  intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
+		}
+		else
+		{
+				// use picking ray since it's an orthographic camera
+				var ray = projector.pickingRay( v, camera );
+				intersects = ray.intersectObjects( this.hiearchyRoot, true );
+		}
+
+		if (intersects.length > 0) {
+		    intersected = intersects[0].object;
+		    if ((_ref = intersected.name) === "hoverOutline" || _ref === "selectOutline" || _ref === "boundingCage") {
+		      intersected = intersected.parent;
+		    }
+		    if (intersected !== this.currentSelect) {
+		      this._unSelect();
+		      this._onSelect(intersected);
+		      return this.currentSelect;
+		    } else {
+		      return this.currentSelect;
+		    }
+		  } else {
+		    console.log("otot");
+		    return this._unSelect();
+		}
+
+	};
+
   SelectionHelper.prototype.isThereObjectAt = function(x, y) {
     var intersects, raycaster, v;
     v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);

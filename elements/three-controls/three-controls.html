@@ -1,4 +1,4 @@
-<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes projection" tabindex="0">
 	<style>
 		table
 		{
@@ -35,6 +35,19 @@
 					<td>
 						<input type="checkbox" checked="{{ showStats }}" class="stats uicons" rel="tooltip" title="toggle stats" />
 						<label for="stats"></label>
+					</td>
+					<td>
+						<select name="projection" value="{{projection}}">
+							<option selected="selected" disabled>Projection</option>
+							<option value="perspective" >perspective</option>
+							<option value="orthographic">orthographic</option>
+						</select>
+
+						<!--
+						"{{ (projection === 'perspective') ? 'selected' : ''  }}" 
+						<input type="radio" name="projection" value="perspective" checked="{{projection === 'perspective'}}">perspective<br>
+						<input type="radio" name="projection" value="orthographic" checked="{{projection === 'orthographic'}}" >orthographic
+						checked="{{projection === 'perspective'}} -->
 					</td>
 					<td>
 						<input type="button" name="capture" value="screencap" class="screencap uicons" rel="tooltip" title="take a screenshot" on-click="onCapture" />

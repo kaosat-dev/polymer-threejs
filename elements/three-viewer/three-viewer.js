@@ -16,6 +16,7 @@ Polymer('three-viewer', {
 		showStats: false,
 		showControls: false,
 		showAxes:true,
+		projection:"perspective",
 
     //for interactions, perhaps move this to a different component
     selectedObject:null,
@@ -334,6 +335,19 @@ Polymer('three-viewer', {
 		{
 			console.log("showAxesChanged", this.showAxes);
 			this.axes.toggle( this.showAxes ) ;
+		},
+		projectionChanged:function()
+		{
+			console.log("projectionChanged", this.projection);
+			if(this.projection == "orthographic")
+			{
+					this.camera.toOrthographic();
+			}
+			else
+			{
+          this.camera.toPerspective();
+          //@camera.setZoom(1);
+			}
 		},
     highlightedObjectChanged:function()
     {
