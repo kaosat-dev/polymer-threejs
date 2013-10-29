@@ -9,9 +9,8 @@
 		<div class="wrapper" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp"> 
 			<div id="viewer"></div>
 			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" 
-			showAxes="{{showAxes}}" projection="{{projection}}" on-capture-request="captureRequest" ></three-controls>
+			showAxes="{{showAxes}}" projection="{{projection}}" orientation="{{orientation}}" on-capture-request="captureRequest" ></three-controls>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
-
 			<!--for downloads-->
 			<a style="position:absolute;top:10px;" id="downloadAutoLink" title="Test.png"></a>
 		</div>

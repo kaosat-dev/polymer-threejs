@@ -8,8 +8,10 @@ Polymer('three-controls', {
 			this.showShadows = true;
 			this.showAxes = true;
 			this.projection = "perspective";
+			this.orientation = "diagonal";
 		},
 		onCapture:function(){
 			this.fire("capture-request");
 		}
+		
 });

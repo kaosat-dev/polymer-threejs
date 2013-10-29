@@ -17,6 +17,7 @@ Polymer('three-viewer', {
 		showControls: false,
 		showAxes:true,
 		projection:"perspective",
+		orientation:"diagonal",
 
     //for interactions, perhaps move this to a different component
     selectedObject:null,
@@ -47,6 +48,9 @@ Polymer('three-viewer', {
         	viewAngle : 40,
         	autoRotate   : false
       	},
+		controlsConf:{
+			userPanSpeed : 3.0
+		},
 		created: function() {
 			console.log("created three-viewer");
 			/*this.shadows= this.shadows || {
@@ -62,12 +66,9 @@ Polymer('three-viewer', {
 			this.setInitialStyle();
 			this.init();
 			this.animate();
-
 		},
 		ready: function() {
 			console.log("ready");
-			//this.width=320;
-			//this.height=240;
 		},
 		enableHandler: function(inEnable, inMethodName, inNode, inEventName, inCapture) {
 					var m = 'bound' + inMethodName;
@@ -195,7 +196,13 @@ Polymer('three-viewer', {
 		setupControls: function()
 		{
 			this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
-			this.controls.autoRotate = this.autoRotate;	
+			this.controls.userPanSpeed = 8.0;
+			this.controls.userZoomSpeed = 2.0;
+    	this.controls.userRotateSpeed = 2.0;
+
+			this.controls.autoRotate = this.autoRotate;
+			this.controls.autoRotateSpeed = 4.0;
+
 		},
 		resizeHandler: function() {
 			var parent =  this.parentNode.host || this.parentNode;
@@ -351,6 +358,37 @@ Polymer('three-viewer', {
           //@camera.setZoom(1);
 			}
 		},
+		orientationChanged:function()
+		{
+				console.log("orientation changed");
+				//TODO: streamline this
+				switch(this.orientation)
+				{
+					case 'diagonal':
+						this.camera.toDiagonalView();
+						break;
+					case 'top':
+						this.camera.toTopView();
+						break;
+					case 'bottom':
+						this.camera.toBottomView();
+						break;
+					case 'left':
+						this.camera.toLeftView();
+						break;
+					case 'right':
+						this.camera.toRightView();
+						break;
+					case 'front':
+						this.camera.toFrontView();
+						break;
+					case 'back':
+						this.camera.toBackView();
+						break;
+					default:
+						this.camera.toDiagonalView();
+				}
+		},
     highlightedObjectChanged:function()
     {
       console.log("highlighted object changed",this.highlightedObject);
@@ -370,11 +408,6 @@ Polymer('three-viewer', {
       //console.log("I moved",event);
       var x = event.impl.offsetX;
       var y = event.impl.offsetY;
-      //console.log("x",x,"y",y);
-
-      /*var mouse = {};
-      mouse.x = ( event.impl.clientX / this.width ) * 2 - 1;
-			mouse.y = - ( event.impl.clientY / this.height ) * 2 + 1;*/
 
       var intersects, projector, raycaster, v;
       v = new THREE.Vector3((x / this.width) * 2 - 1, -(y / this.height) * 2 + 1, 1);
@@ -408,7 +441,7 @@ Polymer('three-viewer', {
     },
     pointerDown:function(event)
     {
-        console.log("pointer down");
+        //console.log("pointer down");
         var x = event.impl.offsetX;
         var y = event.impl.offsetY;
 
@@ -436,7 +469,7 @@ Polymer('three-viewer', {
     },
     pointerUp:function(event)
     {
-        console.log("pointer up");
+        //console.log("pointer up",event);
         var x = event.impl.offsetX;
         var y = event.impl.offsetY;
 
@@ -445,30 +478,26 @@ Polymer('three-viewer', {
         var _pushEnd = new Date().getTime()
         var _elapsed = _pushEnd - this._pushStart;
 
-
-        console.log( "elapsed", _elapsed );
         if(_elapsed <= 125)
         {
           //simple, fast click
-          console.log("simple, fast click");
+          //console.log("simple, fast click");
           this._longAction = false;
         }
         else
         {
-          console.log("long click/move etc");
+          //console.log("long click/move etc");
           this._longAction = true;
         }
 
-        //hiearchyRoot = if @assembly? then @assembly.children else @scene.children
         this.selectionHelper.viewWidth=this.width;
         this.selectionHelper.viewHeight=this.height;
         var selected = this.selectionHelper.getObjectAt(x,y);
 
-        console.log("selected",selected);
+        //console.log("selected",selected);
       
         if( selected != null && selected != undefined)
         {
-          console.log("PROUT");
           this.selectionHelper.selectObjectAt(x,y)
           /*if( this.selectedObject  == null || this.selectedObject == undefined)
           {*/
@@ -485,6 +514,7 @@ Polymer('three-viewer', {
           if (this._longAction == false)
           {
             this.selectedObject = null;
+						this.selectionHelper._unSelect();
             
             //@trigger("selectionChange",@currentSelection,null)
             //@selectionHelper._unSelect()

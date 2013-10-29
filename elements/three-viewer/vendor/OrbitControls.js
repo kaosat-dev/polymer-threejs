@@ -163,9 +163,7 @@ THREE.OrbitControls = function ( object, domElement ) {
         var phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.y * offset.y ), offset.z );
 
         if ( this.autoRotate ) {
-
             this.rotateLeft( getAutoRotationAngle() );
-
         }
 
         theta += thetaDelta;
@@ -199,7 +197,6 @@ THREE.OrbitControls = function ( object, domElement ) {
             this.dispatchEvent( changeEvent );
 
             lastPosition.copy( this.object.position );
-
         }
 
     };

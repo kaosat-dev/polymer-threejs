@@ -1,4 +1,4 @@
-<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes projection" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes projection orientation" tabindex="0">
 	<style>
 		table
 		{
@@ -43,11 +43,18 @@
 							<option value="orthographic">orthographic</option>
 						</select>
 
-						<!--
-						"{{ (projection === 'perspective') ? 'selected' : ''  }}" 
-						<input type="radio" name="projection" value="perspective" checked="{{projection === 'perspective'}}">perspective<br>
-						<input type="radio" name="projection" value="orthographic" checked="{{projection === 'orthographic'}}" >orthographic
-						checked="{{projection === 'perspective'}} -->
+					</td>
+					<td>
+						<select name="orientation" value="{{orientation}}">
+							<option selected="selected" disabled>Orientation</option>
+							<option value="diagonal" >diagonal</option>
+							<option value="top" >top</option>
+							<option value="bottom" >bottom</option>
+							<option value="left" >left</option>
+							<option value="right" >right</option>
+							<option value="front" >front</option>
+							<option value="back" >back</option>
+						</select>
 					</td>
 					<td>
 						<input type="button" name="capture" value="screencap" class="screencap uicons" rel="tooltip" title="take a screenshot" on-click="onCapture" />
