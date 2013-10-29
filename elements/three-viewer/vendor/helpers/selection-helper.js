@@ -45,6 +45,9 @@ function SelectionHelper(options) {
     this.hasEventListener = THREE.EventDispatcher.prototype.hasEventListener;
     this.removeEventListener = THREE.EventDispatcher.prototype.removeEventListener;
     this.dispatchEvent = THREE.EventDispatcher.prototype.dispatchEvent;
+
+		//for camera
+		this.isOrtho = false;
   }
 
   SelectionHelper.prototype._onHover = function(selection) {
@@ -189,7 +192,8 @@ function SelectionHelper(options) {
 
 
 	SelectionHelper.prototype.pick = function(x,y,isOrtho){
-		var isOrtho = isOrtho || false;
+		//var isOrtho = isOrtho || false;
+		var isOrtho = isOrtho || this.isOrtho;
 		var intersected, intersects, raycaster, v, _ref;
 
 		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
@@ -202,35 +206,15 @@ function SelectionHelper(options) {
 		else
 		{
 				// use picking ray since it's an orthographic camera
-				var ray = projector.pickingRay( v, camera );
+				var ray = this.projector.pickingRay( v, this.camera );
 				intersects = ray.intersectObjects( this.hiearchyRoot, true );
 		}
 
-		if (intersects.length > 0) {
-		    intersected = intersects[0].object;
-		    if ((_ref = intersected.name) === "hoverOutline" || _ref === "selectOutline" || _ref === "boundingCage") {
-		      intersected = intersected.parent;
-		    }
-		    if (intersected !== this.currentSelect) {
-		      this._unSelect();
-		      this._onSelect(intersected);
-		      return this.currentSelect;
-		    } else {
-		      return this.currentSelect;
-		    }
-		  } else {
-		    console.log("otot");
-		    return this._unSelect();
-		}
-
+		return intersects;
 	};
 
   SelectionHelper.prototype.isThereObjectAt = function(x, y) {
-    var intersects, raycaster, v;
-    v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
-    this.projector.unprojectVector(v, this.camera);
-    raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
-    intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
+		var intersects = this.pick(x,y,false);
     if (intersects.length > 0) {
       return true;
     }
@@ -238,11 +222,7 @@ function SelectionHelper(options) {
   };
 
   SelectionHelper.prototype.getObjectAt = function(x, y) {
-    var intersected, intersects, raycaster, v, _ref;
-    v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
-    this.projector.unprojectVector(v, this.camera);
-    raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
-    intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
+		var intersects = this.pick(x,y,false);
     if (intersects.length > 0) {
       intersected = intersects[0].object;
       if ((_ref = intersected.name) === "hoverOutline" || _ref === "selectOutline" || _ref === "boundingCage") {
@@ -255,11 +235,7 @@ function SelectionHelper(options) {
   };
 
   SelectionHelper.prototype.selectObjectAt = function(x, y) {
-    var intersected, intersects, raycaster, v, _ref;
-    v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
-    this.projector.unprojectVector(v, this.camera);
-    raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
-    intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
+    var intersects = this.pick(x,y,false);
     if (intersects.length > 0) {
       intersected = intersects[0].object;
       if ((_ref = intersected.name) === "hoverOutline" || _ref === "selectOutline" || _ref === "boundingCage") {
@@ -279,11 +255,7 @@ function SelectionHelper(options) {
   };
 
   SelectionHelper.prototype.highlightObjectAt = function(x, y) {
-    var intersects, raycaster, v;
-    v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
-    this.projector.unprojectVector(v, this.camera);
-    raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
-    intersects = raycaster.intersectObjects(this.hiearchyRoot, true);
+    var intersects = this.pick(x,y,false);
     if (intersects.length > 0) {
       if (intersects[0].object !== this.currentHover) {
         if (intersects[0].object.name !== "workplane" && intersects[0].object.name !== "hoverOutline") {

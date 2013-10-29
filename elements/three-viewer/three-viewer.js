@@ -342,10 +342,12 @@ Polymer('three-viewer', {
 			if(this.projection == "orthographic")
 			{
 					this.camera.toOrthographic();
+					this.selectionHelper.isOrtho = true;
 			}
 			else
 			{
           this.camera.toPerspective();
+					this.selectionHelper.isOrtho = false;
           //@camera.setZoom(1);
 			}
 		},
