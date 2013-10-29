@@ -18,7 +18,26 @@ Polymer('three-viewer-extra', {
 			link.click();*/
 		}
 		this.captureScreen(screenCapDone.bind(this));
+	},
+	pointerMove2:function(event)
+	{
+			//this.super(event); //TODO: how to handle these kind of event handlers + inheritance ?
+			this.pointerMove(event);
+			/*
+			var x = event.impl.offsetX;
+      var y = event.impl.offsetY;
+			function moveOverlay()
+			{
+				this.$.infoOverlay.impl.style.left = x+"px";
+				this.$.infoOverlay.impl.style.top  = y+"px";
+				//console.log("this.$.infoOverlay.left",this.$.infoOverlay);
+			}
+			this.async(moveOverlay);
+			//this.$.infoOverlay.impl.style.left = x+"px";
+			//this.$.infoOverlay.impl.style.top  = y+"px";*/
 	}
+
+
 });
 
 

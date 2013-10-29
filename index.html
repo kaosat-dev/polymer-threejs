@@ -7,49 +7,22 @@
     
     <!-- Load custom element -->
     <link rel="import" href="elements/three-elements.html">
+		
   </head>
-  <body style="min-height: 100%">
+  <body >
 
-    <!-- Instantiate custom elements 
-    <three-viewer  viewAngle="25" autoRotate showControls showShadows id="viewer1" style="width:100%;height:200px;"></three-viewer>-->
+    <!-- Instantiate custom elements -->
+    <three-viewer  viewAngle="25" autoRotate showControls showShadows id="viewer1" style="width:100%;height:200px;"></three-viewer>
     <three-viewer-extra viewAngle="45" showControls style="left:680px;top:300px;border: 1px solid blue;width:640px;height:480px"></three-viewer-extra>
-    <!--<three-editor showShadows=true style="left:20px;top:300px;border: 1px solid red;width:320px;height:300px; background-color:#c0ff00"> </three-editor>-->
+    <three-editor showShadows=true style="left:20px;top:300px;border: 1px solid red;width:320px;height:300px; background-color:#c0ff00"> </three-editor>
 
-		<!--debug attempt for not working download attribute on <a> when ran from localhost
-		<polymer-element name="href-download" attributes="fileName fileContent" >
-			<template>
-					<style>
-						@host{
-							* {
-								display:block;
-							}
-						}
-					</style>
-					<input type="button" value="download file" on-click="startDownload"/>
-					<a style="position:absolute;top:10px;" id="downloadAutoLink" title="{{fileName}}"></a>
-			</template>
-			<script>
-				Polymer('href-download', {
-				fileName: "dummy.txt",
-				fileContent: "foobar",
-				startDownload:function()
-				{
-					var bb = new Blob([this.fileContent], {type: 'text/plain'});
-					var link = this.$.downloadAutoLink.impl;
-					link.download = this.fileName;
-					link.href = window.URL.createObjectURL(bb);
-					link.click();
-				}
-			});
-			</script>
-		</polymer-element>
-		<href-download style="position:absolute;left:180px;top:500px"> </href-download>-->
 
+	<script src="elements/three-viewer/vendor/three.js"></script>
+	<script src="vendor/stl-loader.js"></script>
 	<script>
     document.body.style.opacity = 0;
     window.addEventListener('WebComponentsReady', function() {
 	    document.body.style.opacity = 1; // show body now that registration is done.
-		
 			
 			//Adding objects to scene
 	    var threeViewer = document.querySelector('three-viewer-extra');
@@ -76,14 +49,74 @@
 			
 			threeViewer.addToScene(sphere);
 
+			/*----------------------------------------------------------*/
 			//do a sceencap of the current viewer: callback gets called with a data url img 
 			function screenCapDone(imgData)
 			{
 				//imgData contains the "data:image" (encoded image data)
 				//console.log("imgData",imgData);
-        
 			}
       threeViewer.captureScreen(screenCapDone);
+
+			/*----------------------------------------------------------*/
+			//load external data, add to scene
+			var loader = new THREE.STLLoader();
+      loader.addEventListener( 'load', function ( event ) {
+							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 200 } );
+              var geometry = event.content;
+							geometry.computeBoundingBox ();
+							geometry.computeVertexNormals();
+							geometry.computeFaceNormals();
+
+							geometry.computeBoundingBox();
+      				geometry.computeCentroids();
+      				geometry.computeBoundingSphere();
+
+
+              var mesh = new THREE.Mesh( geometry, material );
+
+							mesh.name = "pr2_head_pan";
+              mesh.position.set( 0, - 0.37, - 0.6 );
+              //mesh.rotation.set( - Math.PI / 2, 0, 0 );
+              mesh.scale.set( 200, 200, 200 );
+
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+
+              threeViewer.addToScene( mesh );
+
+      } );
+      loader.load( './models/pr2_head_pan.stl' );
+
+
+
+			var loader = new THREE.STLLoader();
+      loader.addEventListener( 'load', function ( event ) {
+							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 200 } );
+              var geometry = event.content;
+							/*geometry.computeBoundingBox ();
+							geometry.computeVertexNormals();
+							geometry.computeFaceNormals();*/
+
+							geometry.computeBoundingBox();
+      				geometry.computeCentroids();
+      				geometry.computeBoundingSphere();
+
+              var mesh = new THREE.Mesh( geometry, material );
+
+							mesh.name = "pr2_head_tilt";
+              mesh.position.set( 0.136, - 0.37, - 0.6 );
+              //mesh.rotation.set( - Math.PI / 2, 0.3, 0 );
+              mesh.scale.set( 200, 200, 200 );
+
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+
+							threeViewer.addToScene(mesh);
+
+      } );
+			loader.load('./models/pr2_head_tilt.stl');
+
     });
   </script>
   </body>

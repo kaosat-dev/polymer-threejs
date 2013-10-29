@@ -19,6 +19,9 @@ Polymer('three-viewer', {
 		projection:"perspective",
 		orientation:"diagonal",
 
+		//TODO:add option to set camera up (z/y)
+		cameraUp : [0,0,1],
+
     //for interactions, perhaps move this to a different component
     selectedObject:null,
     highlightedObject : null,
@@ -51,6 +54,7 @@ Polymer('three-viewer', {
 		controlsConf:{
 			userPanSpeed : 3.0
 		},
+		//custom elements lifecycle callbacks
 		created: function() {
 			console.log("created three-viewer");
 			/*this.shadows= this.shadows || {
@@ -69,7 +73,9 @@ Polymer('three-viewer', {
 		},
 		ready: function() {
 			console.log("ready");
+			this.cameraUp = new THREE.Vector3(this.cameraUp[0],this.cameraUp[1],this.cameraUp[2]);
 		},
+		//basic setup
 		enableHandler: function(inEnable, inMethodName, inNode, inEventName, inCapture) {
 					var m = 'bound' + inMethodName;
 					this[m] = this[m] || this[inMethodName].bind(this);
@@ -402,6 +408,20 @@ Polymer('three-viewer', {
       //this.render()
 			console.log("object hover");
     },
+		keyDown:function(event)
+		{
+			console.log("key pressed",event);
+
+			if(event.impl.keyCode == 46 ) //supr
+			{
+				if(this.selectedObject!=null && this.selectedObject!=undefined)
+				{
+					this.rootAssembly.remove(this.selectedObject);
+					this.selectedObject = null;
+					
+				}
+			}
+		},
     pointerMove:function(event)
     {
       //TODO: bingo ! the issue with picking comes from auto rotate!  why ?? investigate !
@@ -466,6 +486,14 @@ Polymer('three-viewer', {
       return false
       */
 
+			//set focus so keyboard binding works
+			if( document.activeElement != this.impl)
+			{
+				console.log("document.activeElement",document.activeElement);
+				this.focus();
+				console.log("document.activeElement",document.activeElement,this);
+			}
+			
     },
     pointerUp:function(event)
     {

@@ -39,7 +39,6 @@ function SelectionHelper(options) {
     this.options = options;
     this.currentHover = null;
     this.currentSelect = null;
-    this.selectionColor = 0xfffccc;
     this.projector = new THREE.Projector();
     this.addEventListener = THREE.EventDispatcher.prototype.addEventListener;
     this.hasEventListener = THREE.EventDispatcher.prototype.hasEventListener;
@@ -48,6 +47,8 @@ function SelectionHelper(options) {
 
 		//for camera
 		this.isOrtho = false;
+		this.selectionColor = 0xfffccc;
+		this.outlineColor = 0xffc200;
   }
 
   SelectionHelper.prototype._onHover = function(selection) {
@@ -100,8 +101,11 @@ function SelectionHelper(options) {
     });*/
 
     var cage = new THREE.BoundingBoxHelper( selection,0xFF0000 );
+		cage.name = "boundingCage";
+		cage.update();
     selection.cage = cage;
     selection.add(cage);
+		
 
     outlineMaterial = new THREE.MeshBasicMaterial({
       color: 0xff0000,//0xffc200,
@@ -258,7 +262,7 @@ function SelectionHelper(options) {
     var intersects = this.pick(x,y,false);
     if (intersects.length > 0) {
       if (intersects[0].object !== this.currentHover) {
-        if (intersects[0].object.name !== "workplane" && intersects[0].object.name !== "hoverOutline") {
+        if (intersects[0].object.name !== "workplane" && intersects[0].object.name !== "hoverOutline" && intersects[0].object.name !== "boundingCage") {
           this._unHover();
           return this._onHover(intersects[0].object);
         }

@@ -241,17 +241,15 @@ THREE.CombinedCamera.prototype.toRightView = function() {
     nPost.x = -offset.length();
     this.position = nPost;
     this.lookAt(this.target);
-
 };
 
 THREE.CombinedCamera.prototype.toTopView = function() {
 	
-	var offset = this.position.clone().sub(this.target);
+		var offset = this.position.clone().sub(this.target);
     var nPost = new  THREE.Vector3();
     nPost.z = offset.length();
     this.position = nPost;
     this.lookAt(this.target);
-
 };
 
 THREE.CombinedCamera.prototype.toBottomView = function() {
