@@ -166,6 +166,7 @@ THREE.OrbitControls = function ( object, domElement, upVector ) {
           //in case of y up
           var theta = Math.atan2( offset.x, offset.z );
           var phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
+          thetaDelta = -(thetaDelta);
         }
 
         if ( this.autoRotate ) {
