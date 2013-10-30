@@ -90,13 +90,12 @@ Polymer('three-viewer', {
 		init: function()
 		{
 			this.setupRenderer();
+      this.setupScene();
 			this.setupLights();
-			this.setupScene();
 			this.setupControls();
 			
 			//move these ???
       this.scene.add(this.rootAssembly); //entry point to store meshes
-
 
 			this.selectionHelper = new SelectionHelper({camera:this.camera,color:0x000000,textColor:0xffffff})
       /*@selectionHelper.addEventListener( 'selected',  @onObjectSelected)
@@ -116,8 +115,8 @@ Polymer('three-viewer', {
 			renderer.setSize(this.width, this.height);
 			renderer.shadowMapEnabled = true;
 			renderer.shadowMapAutoUpdate = true;
-			renderer.shadowMapSoft = true;
-			renderer.shadowMapType = THREE.PCFSoftShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
+			//renderer.shadowMapSoft = true;
+			renderer.shadowMapType = THREE.PCFShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
 			
 			this.convertColor(this.bg)
 			renderer.setClearColor( this.bg, 1 );
@@ -140,6 +139,7 @@ Polymer('three-viewer', {
 		  	ambientColor = 0x565595
 		  	ambientLight = new THREE.AmbientLight(ambientColor)
 			  
+    /*
 		  	spotLight = new THREE.SpotLight( 0xbbbbbb, 1.5)  ;  
 		  	spotLight.position.x = 50;
 		  	spotLight.position.y = 50;
@@ -149,10 +149,31 @@ Polymer('three-viewer', {
 			spotLight.shadowCameraFov =60;
 			spotLight.shadowMapBias = 0.0039;
 			spotLight.shadowMapDarkness = 0.5;
-			shadowResolution = 512 //parseInt(@settings.shadowResolution.split("x")[0])
+			shadowResolution = 512; //parseInt(@settings.shadowResolution.split("x")[0])
 			spotLight.shadowMapWidth = shadowResolution
 			spotLight.shadowMapHeight = shadowResolution
-			spotLight.castShadow = true
+			spotLight.castShadow = true*/
+
+      var SHADOW_MAP_WIDTH = 4096, SHADOW_MAP_HEIGHT = 2048;
+      spotLight = new THREE.SpotLight( 0xbbbbbb, 1.5, 0, Math.PI, 1 );
+			spotLight.position.set( 20, 20, 250 );
+			spotLight.target.position.set( 0, 0, 0 );
+
+			spotLight.castShadow = true;
+
+			spotLight.shadowCameraNear = 100;
+			spotLight.shadowCameraFar = this.camera.far;
+			spotLight.shadowCameraFov = 50;
+
+				//light.shadowCameraVisible = true;
+
+			spotLight.shadowBias = 0.0001;
+			spotLight.shadowDarkness = 0.5;
+
+			spotLight.shadowMapWidth = SHADOW_MAP_WIDTH;
+			spotLight.shadowMapHeight = SHADOW_MAP_HEIGHT;
+
+
 			  
 			lights = [ambientLight,pointLight, pointLight2, spotLight]
 			mainScene.lights = lights
