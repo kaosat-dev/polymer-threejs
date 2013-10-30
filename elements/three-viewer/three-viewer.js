@@ -295,6 +295,9 @@ Polymer('three-viewer', {
 			// delta = change in time since last call (in seconds)
 			var delta = this.clock.getDelta(); 
 			this.controls.update(); 
+      try{
+      this.selectionHelper.camera = camera;}
+      catch(error){}
 			
 			if(this.showStats == true)
 			{
@@ -425,7 +428,7 @@ Polymer('three-viewer', {
 		onObjectHover:function()
 		{
       //this.render()
-			console.log("object hover");
+			//console.log("object hover");
     },
 		keyDown:function(event)
 		{
@@ -480,7 +483,7 @@ Polymer('three-viewer', {
     },
     pointerDown:function(event)
     {
-        //console.log("pointer down");
+        console.log("pointer down");
         var x = event.impl.offsetX;
         var y = event.impl.offsetY;
 
