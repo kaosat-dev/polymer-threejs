@@ -132,7 +132,6 @@ THREE.CustomGridHelper.prototype._drawGrid = function() {
         linewidth: 2,
         transparent: true
       });
-      console.log("grid basis done",this);
       
       for (var i = -size/2; i <= size/2; i += step)
   	  {

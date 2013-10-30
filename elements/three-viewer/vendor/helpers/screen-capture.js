@@ -10,7 +10,6 @@ function captureScreen(callback, domElement, width, height, mimeType) {
   if (!domElement) {
     throw new Error("Cannot Do screenshot without canvas domElement");
   }
-	console.log("domElement", domElement);
   srcImg = domElement.toDataURL(mimeType);
 
   _aspectResize = function(srcUrl, dstW, dstH) {
