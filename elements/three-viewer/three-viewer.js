@@ -200,11 +200,9 @@ Polymer('three-viewer', {
 		          this.FAR,
 		          this.NEAR,
 		          this.FAR);
-		
-			console.log("this.defaultCameraPosition",this.defaultCameraPosition)
-	      	this.camera.up = new THREE.Vector3( 0, 0, 1 );
-	      	this.camera.position.copy(this.defaultCameraPosition);
-	      	this.camera.defaultPosition.copy(this.defaultCameraPosition);
+        this.camera.up = new THREE.Vector3( 0, 0, 1 );
+	      this.camera.position.copy(this.defaultCameraPosition);
+	      this.camera.defaultPosition.copy(this.defaultCameraPosition);
 		    this.scene.add(this.camera);
 		    
 		    //add grid
@@ -277,11 +275,11 @@ Polymer('three-viewer', {
 			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
-			console.log("width",this.width,"height",this.height);
 			
 			//setup backround color
 			this.bg = cs.getPropertyValue("background-color");
-			console.log("background color", this.bg);
+
+      //console.log("Style initialized: width",this.width,"height",this.height,"background color", this.bg);
 
 			this.enableResizeHandler(true);
 
