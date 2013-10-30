@@ -200,13 +200,13 @@ Polymer('three-viewer', {
 		          this.FAR,
 		          this.NEAR,
 		          this.FAR);
-        this.camera.up = new THREE.Vector3( 0, 0, 1 );
+        this.camera.up = this.cameraUp; //new THREE.Vector3( 0, 0, 1 );
 	      this.camera.position.copy(this.defaultCameraPosition);
 	      this.camera.defaultPosition.copy(this.defaultCameraPosition);
 		    this.scene.add(this.camera);
 		    
 		    //add grid
-		    this.grid = new THREE.CustomGridHelper(200,10)
+		    this.grid = new THREE.CustomGridHelper(200,10,this.cameraUp)
 		    this.scene.add(this.grid);
 		    //add axes
 		    this.axes = new THREE.LabeledAxes()
@@ -220,7 +220,7 @@ Polymer('three-viewer', {
 		},
 		setupControls: function()
 		{
-			this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
+			this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement, this.cameraUp );
 			this.controls.userPanSpeed = 8.0;
 			this.controls.userZoomSpeed = 2.0;
     	this.controls.userRotateSpeed = 2.0;
@@ -483,7 +483,7 @@ Polymer('three-viewer', {
     },
     pointerDown:function(event)
     {
-        console.log("pointer down");
+        //console.log("pointer down");
         var x = event.impl.offsetX;
         var y = event.impl.offsetY;
 
@@ -511,11 +511,8 @@ Polymer('three-viewer', {
 			//set focus so keyboard binding works
 			if( document.activeElement != this.impl)
 			{
-				console.log("document.activeElement",document.activeElement);
 				this.focus();
-				console.log("document.activeElement",document.activeElement,this);
 			}
-			
     },
     pointerUp:function(event)
     {

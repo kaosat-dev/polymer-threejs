@@ -759,6 +759,11 @@ THREE.TransformControls = function ( camera, domElement ) {
 	 	this.gizmo["translate"].hide();
 	 	this.gizmo["rotate"].hide();
 	 	this.gizmo["scale"].hide();
+
+    /*this.gizmo["translate"].show();
+	 	this.gizmo["rotate"].show();
+	 	this.gizmo["scale"].show();*/
+
 	 	this.gizmo[_mode].show();
 
 	 	scope.update();
@@ -782,9 +787,9 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( _mode == "scale" ) scope.space = "local";
 
-	 	this.gizmo["translate"].hide();
-	 	this.gizmo["rotate"].hide();
-	 	this.gizmo["scale"].hide();	
+	 	//this.gizmo["translate"].hide();
+	 	//this.gizmo["rotate"].hide();
+	 	//this.gizmo["scale"].hide();	
 	 	this.gizmo[_mode].show();
 
 		this.update();

@@ -7,7 +7,6 @@ Polymer('three-editor', {
 
     //if mousedown PLUS move NOT over object : rotate/pan, do not deselect current obect
     this.transformControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
-    
 
     function onControlsChange(event)
     {
@@ -17,10 +16,7 @@ Polymer('three-editor', {
           this.controls.enabled = false;
         }
     }
-        
     this.transformControls.addEventListener( 'change', onControlsChange.bind(this) )
-
-    //update
   },
   update: function()
 	{

@@ -87,7 +87,7 @@ THREE.TextDrawHelper.prototype.drawTextOnPlane = function(text, size) {
 
 
 
-THREE.CustomGridHelper = function ( size, step , color, opacity, text, textColor, textPosition) {
+THREE.CustomGridHelper = function ( size, step , upVector, color, opacity, text, textColor, textPosition) {
 	
       defaults = {
         size: 1000,
@@ -108,10 +108,27 @@ THREE.CustomGridHelper = function ( size, step , color, opacity, text, textColor
       this.text = text || true;
       this.textColor= textColor || "#000000";
       this.textPosition =  "center";
+      this.upVector = upVector || new THREE.Vector3(0,1,0);
       
       this.name = "grid";
       
       this._drawGrid();
+
+      //default grid orientation is z up, rotate if not the case
+      //TODO : fix this
+      /*
+      if(!(this.upVector.x == 0 && this.upVector.y == 0 && this.upVector.z == 1))
+      {
+        var angle = -Math.PI/2;
+        var axis = new THREE.Vector3(1,0,0);
+        
+        this.setRotationFromAxisAngle(axis, angle);
+      }*/
+
+      var upVector = this.upVector;
+      this.up = upVector;
+      this.lookAt(upVector);
+    
       
 };
 
