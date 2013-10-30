@@ -2,6 +2,11 @@
 
 <polymer-element name="three-stats" extends="div" attributes="show" tabindex="0">
 	<template>
+    <style>
+      @host{
+        *{ position:absolute; top:0px;}
+      }
+    </style>
 		<div id="stats" hidden?="{{!show}}"></div>
 	</template>
 	<script src="three-stats.js"></script>

@@ -1,7 +1,6 @@
 Polymer('three-stats', {
 		show:false,
-		ready: function() {
-			console.log("three stats viewer started",this.$)
+		created: function() {
 			this.init();
 		},
 		init:function()
