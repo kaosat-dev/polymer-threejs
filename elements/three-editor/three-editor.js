@@ -24,6 +24,7 @@ Polymer('three-editor', {
       //TODO: camera position does not get update by reference ???
       try{this.transformControls.update();}catch(error){}
 	},
+  //attribute change handlers
   highlightedObjectChanged:function()
   {
   },
@@ -50,6 +51,19 @@ Polymer('three-editor', {
         this.scene.add(this.transformControls);
         newSelection.controls = this.transformControls;
     }
-  }
-
-  });
+  },
+  //event handlers
+  keyDown:function(event)
+	{
+		console.log("key pressed",event);
+		if(event.impl.keyCode == 46 ) //supr
+		{
+			if(this.selectedObject!=null && this.selectedObject!=undefined)
+			{
+				this.rootAssembly.remove(this.selectedObject);
+				this.selectedObject = null;
+				
+			}
+		}
+	}
+});

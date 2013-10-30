@@ -1,13 +1,11 @@
 Polymer('three-viewer-extra', {
-	
+	showControls : false,
 	captureRequest:function()
 	{
 		console.log("screen capture requested");
 		var name = "screenshot.png";
 		function screenCapDone(imgData)
 		{
-			//downloadWithName(imgData, "screenshot.png")
-      console.log("ii",imgData);
 			var link = this.$.downloadAutoLink.impl;
 			link.download = name;
 			link.href = imgData;

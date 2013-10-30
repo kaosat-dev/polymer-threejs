@@ -14,12 +14,9 @@ Polymer('three-viewer', {
 		showGrid: true,
 		showShadows:true,
 		showStats: false,
-		showControls: false,
 		showAxes:true,
 		projection:"perspective",
 		orientation:"diagonal",
-
-		//TODO:add option to set camera up (z/y)
 		cameraUp : [0,0,1],
 
     //for interactions, perhaps move this to a different component
@@ -57,10 +54,6 @@ Polymer('three-viewer', {
 		//custom elements lifecycle callbacks
 		created: function() {
 			console.log("created three-viewer");
-			/*this.shadows= this.shadows || {
-				show:false,
-				resolution:128,
-				self:true};*/
 			this.scene = new THREE.Scene();
 			this.clock = new THREE.Clock();
 			this.rootAssembly = new THREE.Object3D();
@@ -68,7 +61,7 @@ Polymer('three-viewer', {
     enteredView: function() {
 			console.log("entered view");
 			this.setInitialStyle();
-			this.init();
+			this.setup();
 			this.animate();
 		},
 		ready: function() {
@@ -87,7 +80,7 @@ Polymer('three-viewer', {
 					this.enableHandler(inEnable, 'resizeHandler', window, 
 						'resize');
 		},
-		init: function()
+		setup: function()
 		{
 			this.setupRenderer();
       this.setupScene();
@@ -98,11 +91,6 @@ Polymer('three-viewer', {
       this.scene.add(this.rootAssembly); //entry point to store meshes
 
 			this.selectionHelper = new SelectionHelper({camera:this.camera,color:0x000000,textColor:0xffffff})
-      /*@selectionHelper.addEventListener( 'selected',  @onObjectSelected)
-      @selectionHelper.addEventListener( 'unselected', @onObjectUnSelected)*/
-      this.selectionHelper.addEventListener( 'hoverIn', this.onObjectHover);
-      this.selectionHelper.addEventListener( 'hoverOut', this.onObjectHover);
-			
 			this.selectionHelper.hiearchyRoot=this.rootAssembly.children;
 
 		},
@@ -172,8 +160,6 @@ Polymer('three-viewer', {
 
 			spotLight.shadowMapWidth = SHADOW_MAP_WIDTH;
 			spotLight.shadowMapHeight = SHADOW_MAP_HEIGHT;
-
-
 			  
 			lights = [ambientLight,pointLight, pointLight2, spotLight]
 			mainScene.lights = lights
@@ -189,34 +175,28 @@ Polymer('three-viewer', {
 			defaultPosition = cameraSettings.defaultPosition;
 			this.defaultCameraPosition = new THREE.Vector3(defaultPosition[0],defaultPosition[1],defaultPosition[2]);
 			
-		    ASPECT = this.width / this.height;
-		      this.NEAR = 0.1;
-		      this.FAR = 20000;
-		      this.camera = new THREE.CombinedCamera(
-		          this.width,
-		          this.height,
-		          this.viewAngle,
-		          this.NEAR,
-		          this.FAR,
-		          this.NEAR,
-		          this.FAR);
-        this.camera.up = this.cameraUp; //new THREE.Vector3( 0, 0, 1 );
-	      this.camera.position.copy(this.defaultCameraPosition);
-	      this.camera.defaultPosition.copy(this.defaultCameraPosition);
-		    this.scene.add(this.camera);
+	    ASPECT = this.width / this.height;
+      this.NEAR = 0.1;
+      this.FAR = 20000;
+      this.camera = new THREE.CombinedCamera(
+          this.width,
+          this.height,
+          this.viewAngle,
+          this.NEAR,
+          this.FAR,
+          this.NEAR,
+          this.FAR);
+      this.camera.up = this.cameraUp;
+      this.camera.position.copy(this.defaultCameraPosition);
+      this.camera.defaultPosition.copy(this.defaultCameraPosition);
+      this.scene.add(this.camera);
 		    
-		    //add grid
-		    this.grid = new THREE.CustomGridHelper(200,10,this.cameraUp)
-		    this.scene.add(this.grid);
-		    //add axes
-		    this.axes = new THREE.LabeledAxes()
-		    this.scene.add(this.axes);
-		    
-		    /* 
-		    var t1 = new THREE.TextDrawHelper();
-		    var plane = t1.drawTextOnPlane("Hello world");
-		    this.scene.add(plane);
-		    console.log("scene setup ok",this.scene);*/
+	    //add grid
+	    this.grid = new THREE.CustomGridHelper(200,10,this.cameraUp)
+	    this.scene.add(this.grid);
+	    //add axes
+	    this.axes = new THREE.LabeledAxes()
+	    this.scene.add(this.axes);
 		},
 		setupControls: function()
 		{
@@ -227,7 +207,6 @@ Polymer('three-viewer', {
 
 			this.controls.autoRotate = this.autoRotate;
 			this.controls.autoRotateSpeed = 4.0;
-
 		},
 		resizeHandler: function() {
 			var parent =  this.parentNode.host || this.parentNode;
@@ -239,7 +218,7 @@ Polymer('three-viewer', {
 			this.width = parseInt(cs.getPropertyValue("width").replace("px","")) - widthReduct;
 			this.height = parseInt(cs.getPropertyValue("height").replace("px","")) - heightReduct;
 
-			console.log(" oh yeah resize",this.width,this.height);
+			//console.log(" oh yeah resize",this.width,this.height);
 
 			if( window.devicePixelRatio!==null )
 			{
@@ -253,23 +232,15 @@ Polymer('three-viewer', {
 			this.resUpscaler = 1;
       this.hRes = this.width * this.dpr * this.resUpscaler;
       this.vRes = this.height * this.dpr * this.resUpscaler;
-
-			/*this.camera.aspect = this.width / this.height;
-  		this.camera.setSize(this.width,this.height);
-  		this.renderer.setSize(this.hRes, this.vRes);
-  		this.camera.updateProjectionMatrix();*/
-
       
 			this.camera.aspect = this.width / this.height;
+      this.camera.setSize(this.width,this.height);
 			this.camera.updateProjectionMatrix();
-
 			this.renderer.setSize( this.width,this.height );
-			
 		},
 		setInitialStyle:function()
 		{
 			//setup width & height
-			//console.log("style", this.style, window.getComputedStyle(this));
 			var cs = window.getComputedStyle(this);
 			var widthReduct= parseInt(cs.marginLeft.replace("px","")) + parseInt(cs.marginRight.replace("px","")) ;
 			var heightReduct= parseInt(cs.marginBottom.replace("px","")) + parseInt(cs.marginTop.replace("px",""));
@@ -278,11 +249,9 @@ Polymer('three-viewer', {
 			
 			//setup backround color
 			this.bg = cs.getPropertyValue("background-color");
-
       //console.log("Style initialized: width",this.width,"height",this.height,"background color", this.bg);
 
 			this.enableResizeHandler(true);
-
 		},
 		animate: function() 
 		{
@@ -299,12 +268,9 @@ Polymer('three-viewer', {
       this.selectionHelper.camera = camera;}
       catch(error){}
 			
-			if(this.showStats == true)
+			if(this.showStats == true && this.$.stats !== undefined)
 			{
-				if(this.$.stats !== undefined)
-				{
 					this.$.stats.update();
-				}
 			}
 		},
 		render: function() 
@@ -341,9 +307,6 @@ Polymer('three-viewer', {
 			captureScreen(callback, this.renderer.domElement, width, height);
 		},
 		//attribute change handlers / various handlers
-		bgChanged: function() {
-			console.log("bg changed");
-  	},
   	autoRotateChanged:function()
 		{
 			console.log("autoRotateChanged", this.autoRotate);
@@ -432,17 +395,7 @@ Polymer('three-viewer', {
     },
 		keyDown:function(event)
 		{
-			console.log("key pressed",event);
-
-			if(event.impl.keyCode == 46 ) //supr
-			{
-				if(this.selectedObject!=null && this.selectedObject!=undefined)
-				{
-					this.rootAssembly.remove(this.selectedObject);
-					this.selectedObject = null;
-					
-				}
-			}
+      //overidable method stand in
 		},
     pointerMove:function(event)
     {
@@ -453,7 +406,6 @@ Polymer('three-viewer', {
 
       var intersects, projector, raycaster, v;
       v = new THREE.Vector3((x / this.width) * 2 - 1, -(y / this.height) * 2 + 1, 1);
-      //bug somewhere : values of v seem correct (map to -1.0->1.0 in both directions, so perhaps camera issue?
       //console.log("v",x,y, this.width, this.height);
       /*
       projector = new THREE.Projector();
@@ -490,24 +442,6 @@ Polymer('three-viewer', {
         this._actionInProgress = false;
         this._pushStart = new Date().getTime();
       
-       /*#timer to ensure we don't unselect things 
-      if @controlChangeTimeOut?
-        clearTimeout(@controlChangeTimeOut)
-      
-      @actionInProgress = true
-      @pushStart = new Date().getTime()
-      @oldX = x
-      @oldY = y
-      @controlChangeTimeOut = null  
-      @controlChangeTimeOut = setTimeout ( =>
-        @noControlChange = true
-            
-      ), 600
-      
-      event.preventDefault()
-      return false
-      */
-
 			//set focus so keyboard binding works
 			if( document.activeElement != this.impl)
 			{
@@ -521,40 +455,18 @@ Polymer('three-viewer', {
         var y = event.impl.offsetY;
 
         this._actionInProgress = false;
-
         var _pushEnd = new Date().getTime()
         var _elapsed = _pushEnd - this._pushStart;
-
-        if(_elapsed <= 125)
-        {
-          //simple, fast click
-          //console.log("simple, fast click");
-          this._longAction = false;
-        }
-        else
-        {
-          //console.log("long click/move etc");
-          this._longAction = true;
-        }
+        this._longAction = !(_elapsed <= 125)
 
         this.selectionHelper.viewWidth=this.width;
         this.selectionHelper.viewHeight=this.height;
         var selected = this.selectionHelper.getObjectAt(x,y);
 
-        //console.log("selected",selected);
-      
         if( selected != null && selected != undefined)
         {
           this.selectionHelper.selectObjectAt(x,y)
-          /*if( this.selectedObject  == null || this.selectedObject == undefined)
-          {*/
-              this.selectedObject = selected
-          /*}
-          else
-          {
-            oldSelect = @currentSelection
-            @currentSelection = selected
-            @trigger("selectionChange",oldSelect,@currentSelection)*/
+          this.selectedObject = selected
         }
         else
         {
@@ -562,11 +474,7 @@ Polymer('three-viewer', {
           {
             this.selectedObject = null;
 						this.selectionHelper._unSelect();
-            
             //@trigger("selectionChange",@currentSelection,null)
-            //@selectionHelper._unSelect()
-            //@onObjectUnSelected()
-            //@currentSelection = null 
           }
         }
     }
