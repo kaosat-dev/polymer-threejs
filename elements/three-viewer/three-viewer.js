@@ -173,7 +173,7 @@ Polymer('three-viewer', {
       
       dirLight = new THREE.DirectionalLight( 0xffffff, 0.2 );
 				//dirLight.color.setHSV( 0.1, 0.1, 1 );
-				dirLight.position.set( 0, 1.75, 200 );
+				dirLight.position.set( 0, 50, 300 );
 				//dirLight.position.multiplyScalar( 50 );
 
 				dirLight.castShadow = true;
@@ -214,7 +214,7 @@ Polymer('three-viewer', {
 			for (var i=0; i<lights.length; i++)
 			{
 				var light = lights[i]
-			    mainScene.add(light)
+			  mainScene.add(light)
 			}
 		},
 		setupScene:function()
@@ -256,6 +256,44 @@ Polymer('three-viewer', {
 			this.controls.autoRotate = this.autoRotate;
 			this.controls.autoRotateSpeed = 4.0;
 		},
+    setupPostProcess:function()
+    {
+        if(this.renderer instanceof THREE.WebGLRenderer)
+        {
+          /*EffectComposer = require 'EffectComposer'
+          DotScreenPass = require 'DotScreenPass'
+          FXAAShader = require 'FXAAShader'
+          EdgeShader2 = require 'EdgeShader2'
+          EdgeShader = require 'EdgeShader'
+          VignetteShader = require 'VignetteShader'
+          BlendShader = require 'BlendShader'
+          BrightnessContrastShader = require 'BrightnessContrastShader'
+        
+          AdditiveBlendShader = require 'AdditiveBlendShader'
+          EdgeShader3 = require 'EdgeShader3'
+        
+          //shaders, post processing etc
+          resolutionBase = 1
+          resolutionMultiplier = 1.5
+        
+          @fxaaResolutionMultiplier = resolutionBase/resolutionMultiplier
+          composerResolutionMultiplier = resolutionBase*resolutionMultiplier
+        
+          //various passes and rtts
+          renderPass = new THREE.RenderPass(this.scene, this.camera)
+          copyPass = new THREE.ShaderPass( THREE.CopyShader )
+        
+          this.edgeDetectPass3 = new THREE.ShaderPass(THREE.EdgeShader3)
+        
+          contrastPass = new THREE.ShaderPass(THREE.BrightnessContrastShader)
+          contrastPass.uniforms['contrast'].value=0.5
+          contrastPass.uniforms['brightness'].value=-0.4
+          
+          vignettePass = new THREE.ShaderPass(THREE.VignetteShader)
+          vignettePass.uniforms["offset"].value = 0.4;
+          vignettePass.uniforms["darkness"].value = 5;*/
+        }
+    },
 		resizeHandler: function() {
 			var parent =  this.parentNode.host || this.parentNode;
 			var cs = window.getComputedStyle(parent);
@@ -435,14 +473,8 @@ Polymer('three-viewer', {
     {
        console.log("SELECTED object changed",this.selectedObject);
     },
-		onObjectHover:function()
-		{
-      //this.render()
-			//console.log("object hover");
-    },
 		keyDown:function(event)
-		{
-      //overidable method stand in
+		{//overidable method stand in
 		},
     pointerMove:function(event)
     {
@@ -521,9 +553,7 @@ Polymer('three-viewer', {
           {
             this.selectedObject = null;
 						this.selectionHelper._unSelect();
-            //@trigger("selectionChange",@currentSelection,null)
           }
         }
     }
-
   });

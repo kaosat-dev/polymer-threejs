@@ -692,7 +692,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 	var scope = this;
 	
 	var _dragging = false;
-	var _mode = "translate";
+	var _mode = "rotate";
 	var _plane = "XY";
 
 	var changeEvent = { type: "change" };
@@ -727,6 +727,9 @@ THREE.TransformControls = function ( camera, domElement ) {
 	var oldPosition = new THREE.Vector3();
 	var oldScale = new THREE.Vector3();
 	var oldRotationMatrix = new THREE.Matrix4();
+
+  var oldPosition2 = new THREE.Vector3();
+  var oldRotationEuler = new THREE.Euler();
 
 	var parentRotationMatrix  = new THREE.Matrix4();
 	var parentScale = new THREE.Vector3();
@@ -902,7 +905,9 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 				oldPosition.copy( scope.object.position );
 				oldScale.copy( scope.object.scale );
-
+        
+        oldRotationEuler.setFromRotationMatrix(scope.object.matrix);
+        
 				oldRotationMatrix.extractRotation( scope.object.matrix );
 				worldRotationMatrix.extractRotation( scope.object.matrixWorld );
 
@@ -926,8 +931,8 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( scope.object === undefined || scope.axis === undefined || _dragging == false ) return;
 
-		//event.preventDefault();
-		//event.stopPropagation();
+		event.preventDefault();
+		event.stopPropagation();
 
 		var pointer = event.touches? event.touches[0] : event;
 
@@ -952,7 +957,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 				scope.object.position.copy( oldPosition );
 				scope.object.position.add( point );
-
+        
 			} 
 
 			if ( scope.space == "world" || scope.axis.search("XYZ") != -1 ) {
@@ -1092,9 +1097,41 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	function onPointerUp( event ) {
 
+    //console.log("bla",scope.object,scope.axis);    
+    //event dispatching
+    if ( scope.object != undefined && scope.axis != undefined)
+    {
+      if(_mode == "translate")
+      {
+        var translation = new THREE.Vector3();
+        translation.subVectors(scope.object.position,oldPosition);
+        if (!translation.equals( new THREE.Vector3() ))
+        {
+          var translationEvent = { type: "transform",transform:"translate",value:translation };
+          scope.dispatchEvent( translationEvent );
+        }
+      }
+      else if(_mode == "rotate")
+      {
+          var oo = new THREE.Vector3();
+          var tmp = new THREE.Vector3(oldRotationEuler.x,oldRotationEuler.y,oldRotationEuler.z);
+          var tmp2 = new THREE.Vector3(scope.object.rotation.x,scope.object.rotation.y,scope.object.rotation.z);
+          oo.subVectors(tmp2,tmp);
+          var rotation = new THREE.Euler(oo.x, oo.y, oo.z);
+          
+          if (!rotation.equals( new THREE.Euler() ))
+          {
+            var rotationEvent = { type: "transform",transform:"rotate",value:rotation };
+            scope.dispatchEvent( rotationEvent );
+          }
+          
+      }
+    }
+
 		_dragging = false;
 		onPointerHover( event );
 
+    
 	}
 
 	function intersectObjects( pointer, objects ) {

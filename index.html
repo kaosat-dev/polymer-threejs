@@ -26,8 +26,9 @@
 			
 	    var threeViewer = document.querySelector('three-viewer-extra');
       var threeEditor = document.querySelector('three-editor');
-
-	    //console.log("components loaded",threeViewer);
+  
+      //Adjust settings
+      threeEditor.grid.setTextColor("#ffffff");
 	    
       //Adding objects to a scene
 			var cubeGeometry = new THREE.CubeGeometry( 30, 30, 30 ); 
@@ -38,7 +39,7 @@
 			
 			//cube.castShadow =  true
 			  //cube.receiveShadow = true
-			threeViewer.addToScene(cube);
+			//threeViewer.addToScene(cube);
 
 			// Sphere parameters: radius, segments along width, segments along height
 			var sphereGeometry = new THREE.SphereGeometry( 25, 16, 16 ); 
@@ -48,8 +49,9 @@
 			sphere.position.set(10, 50, 30); 
 			sphere.castShadow =  true;this.showShadows
 		      sphere.receiveShadow = true; this.showShadows
-			
-			threeViewer.addToScene(sphere);
+
+			sphere.add(cube);
+			threeEditor.addToScene(sphere);
 
 			/*----------------------------------------------------------*/
 			//do a sceencap of the current viewer: callback gets called with a data url img 
