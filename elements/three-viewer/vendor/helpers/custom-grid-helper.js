@@ -86,7 +86,6 @@ THREE.TextDrawHelper.prototype.drawTextOnPlane = function(text, size) {
 //THREE.TextDrawHelper.prototype = Object.create( THREE.Object3D.prototype );
 
 
-
 THREE.CustomGridHelper = function ( size, step , upVector, color, opacity, text, textColor, textPosition) {
 	
       defaults = {
