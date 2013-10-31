@@ -49,7 +49,6 @@ function captureScreen(callback, domElement, width, height, mimeType) {
       offsetY = (canvas.height - scaled.height) / 2;
       ctx.drawImage(img, offsetX, offsetY, scaled.width, scaled.height);
       mimetype = "image/png";
-			console.log("bla", canvas);
       newDataUrl = canvas.toDataURL(mimetype);
 	  callback(newDataUrl);
     };
