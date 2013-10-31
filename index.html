@@ -13,7 +13,7 @@
     <!-- Instantiate custom elements -->
     <three-viewer viewAngle="25" autoRotate showShadows id="viewer1" style="width:100%;height:100px;"></three-viewer>
     <three-viewer-extra viewAngle="45" showControls style="left:680px;top:200px;border: 1px solid blue;width:640px;height:480px"></three-viewer-extra>
-    <three-editor showShadows showAxes=false cameraUp=[0,0,1] style="left:20px;top:200px;border: 1px solid red;width:640px;height:480px; "> </three-editor>
+    <three-editor showShadows showAxes=false cameraUp=[0,0,1] style="left:20px;top:200px;border: 1px solid red;width:640px;height:480px;background-color:#393939 "> </three-editor>
   <!--background-color:#c0ff00-->
 
 	<script src="elements/three-viewer/vendor/three.js"></script>
@@ -64,7 +64,11 @@
 			//load external data, add to scene
 			var loader = new THREE.STLLoader();
       loader.addEventListener( 'load', function ( event ) {
-							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 200 } );
+							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 200,wrapAround:true,shading: THREE.FlatShading } );
+              var material = new THREE.MeshPhongMaterial( { color: 0x00a9ff, specular: 0xffffff, shininess: 10, shading: THREE.FlatShading} );
+              //00a9ff
+              //0xff0000
+
               var geometry = event.content;
 							geometry.computeBoundingBox ();
 							geometry.computeVertexNormals();
@@ -100,7 +104,9 @@
 
 			var loader = new THREE.STLLoader();
       loader.addEventListener( 'load', function ( event ) {
-							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 200 } );
+							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 2 } );
+              var material = new THREE.MeshPhongMaterial( { color: 0xffc700, specular: 0xffffff, shininess: 6, wrapAround:true} );
+              //color: 0xffdddd,specular: '#a9fcff'
               var geometry = event.content;
 							/*geometry.computeBoundingBox ();
 							geometry.computeVertexNormals();
