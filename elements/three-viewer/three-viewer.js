@@ -320,7 +320,6 @@ Polymer('three-viewer', {
 		showShadowsChanged:function()
 		{
 			console.log("showShadowsChanged", this.showShadows);
-			this.grid.plane.receiveShadow = this.showShadows;
 			
 			//hack for now
 			var settings = {};

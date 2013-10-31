@@ -115,21 +115,9 @@ THREE.CustomGridHelper = function ( size, step , upVector, color, opacity, text,
       this._drawGrid();
 
       //default grid orientation is z up, rotate if not the case
-      //TODO : fix this
-      /*
-      if(!(this.upVector.x == 0 && this.upVector.y == 0 && this.upVector.z == 1))
-      {
-        var angle = -Math.PI/2;
-        var axis = new THREE.Vector3(1,0,0);
-        
-        this.setRotationFromAxisAngle(axis, angle);
-      }*/
-
       var upVector = this.upVector;
       this.up = upVector;
       this.lookAt(upVector);
-    
-      
 };
 
 THREE.CustomGridHelper.prototype = Object.create( THREE.Object3D.prototype );
