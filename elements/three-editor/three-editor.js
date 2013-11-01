@@ -59,11 +59,11 @@ Polymer('three-editor', {
       switch(event.transform)
       {
         case "rotate":
-          console.log("controls rotate",event.value);
+          //console.log("controls rotate",event.value);
           operation = new Rotation(event.value,this.selectedObject);
         break;
         case "translate":
-          console.log("controls translate",event.value);
+          //console.log("controls translate",event.value);
           operation = new Translation(event.value,this.selectedObject);
         break;
       }
@@ -74,8 +74,7 @@ Polymer('three-editor', {
         this.redos = [];
         //hack, have not found a way to get a template instance (repeat) index, if there is one
         operation.index = this.undos.length - 1;
-
-        console.log("editor operations",this.undos);
+        //console.log("editor operations",this.undos);
       }
     }
     this.transformControls.addEventListener( 'transform', onObjectTranform.bind(this) )
@@ -118,17 +117,19 @@ Polymer('three-editor', {
     var operation = this.undos.pop();
     if(operation === undefined) return;
     operation.undo();
-    this.redos.push(operation);
+    //this.redos.push(operation);
+    this.redos.unshift(operation);
     console.log("i want to undo",this.undos);
   },
   redo:function()
   {
     console.log("i want to redo");
-        var operation = this.redos.pop();
+        var operation = this.redos.shift();
         if(operation === undefined) return;
         operation.redo();
         this.undos.push(operation);
   },
+  //attribut change handlers
   //event handlers
   keyDown:function(event)
 	{
@@ -167,20 +168,37 @@ Polymer('three-editor', {
   //TODO: move this, and the html parts to a different web component
   onHistoryItemTapped:function(event, detail, sender)
   {
-     console.log("gne",event);
      var model = sender.templateInstance_.model;
-     console.log("model", model);
-     
-
+     /*console.log("model", model);
      console.log("dfsf", event.target.templateInstance);
-      var model2 = event.target.templateInstance.model;
-    console.log("model2", model2);
+     var model2 = event.target.templateInstance.model;
+     console.log("model2", model2);*/
+    var selectedOperation = model.operation;
+    var endIndex = selectedOperation.index;
+    var startIndex = (this.undos.length-1);
+    //console.log("startIndex",startIndex,"endIndex",endIndex);
+    for(var i=startIndex; i>=endIndex ; i--)
+    {
+      var operation = this.undos[i];
+      operation.undo();
+      this.undos.pop();
+      this.redos.unshift(operation);
+    }
+    
+  },
+  historyRedo:function(event, detail, sender)
+  {
+    var model = event.target.templateInstance.model;
+    var selectedOperation = model.operation;
+    var operationIndex = this.redos.indexOf(selectedOperation);
+    var redos = this.redos.splice(0, operationIndex+1);
 
-     var operation = model.operation;
-     operation.undo();
-     this.undos.pop();
-     this.redos.push(operation);
-     
+    for(var i=0;i<redos.length;i++)
+    {
+      var operation = redos[i];
+      operation.redo();
+      this.undos.push(operation);
+    }
   }
 
 

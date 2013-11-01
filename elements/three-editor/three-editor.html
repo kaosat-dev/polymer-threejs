@@ -27,11 +27,26 @@
           <span> History</span>
           <span title="Redo" style="cursor:pointer" on-tap="redo" >R</span>
         </div>
+
+        <!--in the future (once polymer's official release does not break webgl rendering with three.js
+        repeat="{{operation, operationIndex in undos}}"
+        {{operationIndex}} . 
+
+        {{operation in undos}}
+        repeat="{{i in names.asMap().keys)}} //THIS DOES NOT WORK either...">
+        -->
         <template repeat="{{operation in undos}}">
           <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="onHistoryItemTapped">
-            {{operation.type}}
+           {{operation.index}} {{operation.type}}
           </div>
         </template>
+        <!--redos-->
+        <template repeat="{{operation in redos}}">
+          <div style="border:red;display:block;background-color:rgba(219, 206, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyRedo">
+            {{operation.index}}  {{operation.type}}
+          </div>
+        </template>
+
       </div>
 
 		</div>
