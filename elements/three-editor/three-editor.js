@@ -72,6 +72,9 @@ Polymer('three-editor', {
       {
         this.undos.push(operation);
         this.redos = [];
+        //hack, have not found a way to get a template instance (repeat) index, if there is one
+        operation.index = this.undos.length - 1;
+
         console.log("editor operations",this.undos);
       }
     }
@@ -110,6 +113,22 @@ Polymer('three-editor', {
         newSelection.controls = this.transformControls;
     }
   },
+  undo:function()
+  {
+    var operation = this.undos.pop();
+    if(operation === undefined) return;
+    operation.undo();
+    this.redos.push(operation);
+    console.log("i want to undo",this.undos);
+  },
+  redo:function()
+  {
+    console.log("i want to redo");
+        var operation = this.redos.pop();
+        if(operation === undefined) return;
+        operation.redo();
+        this.undos.push(operation);
+  },
   //event handlers
   keyDown:function(event)
 	{
@@ -138,21 +157,31 @@ Polymer('three-editor', {
       this.transformControls.setMode("translate");
     }
     if(keyCode==90 && ctrlPressed && shiftPressed) {
-        console.log("i want to redo");
-        var operation = this.redos.pop();
-        if(operation === undefined) return;
-        operation.redo();
-        this.undos.push(operation);
-
+        this.redo();
     }  
     else if(keyCode==90 && ctrlPressed) {
-        // ctrl+z was typed.
-        var operation = this.undos.pop();
-        if(operation === undefined) return;
-        operation.undo();
-        this.redos.push(operation);
-        console.log("i want to undo",this.undos);
+      // ctrl+z was typed.
+      this.undo();
     }
-   
-	}
+	},
+  //TODO: move this, and the html parts to a different web component
+  onHistoryItemTapped:function(event, detail, sender)
+  {
+     console.log("gne",event);
+     var model = sender.templateInstance_.model;
+     console.log("model", model);
+     
+
+     console.log("dfsf", event.target.templateInstance);
+      var model2 = event.target.templateInstance.model;
+    console.log("model2", model2);
+
+     var operation = model.operation;
+     operation.undo();
+     this.undos.pop();
+     this.redos.push(operation);
+     
+  }
+
+
 });

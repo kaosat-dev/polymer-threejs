@@ -21,9 +21,16 @@
           R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
         </template>
       </div>
-      <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px">
-        <template repeat="{{operation in undos }}">
-          <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;">Operation: {{operation.type}}</div>
+      <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px;text-align:center;">
+        <div>
+          <span titme="Undo" style="cursor:pointer" on-tap="undo" >U</span>
+          <span> History</span>
+          <span title="Redo" style="cursor:pointer" on-tap="redo" >R</span>
+        </div>
+        <template repeat="{{operation in undos}}">
+          <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="onHistoryItemTapped">
+            {{operation.type}}
+          </div>
         </template>
       </div>
 
