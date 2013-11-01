@@ -1,6 +1,6 @@
 Polymer('three-stats', {
 		show:false,
-		created: function() {
+		ready: function() {
 			this.init();
 		},
 		init:function()
