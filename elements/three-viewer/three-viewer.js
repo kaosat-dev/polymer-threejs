@@ -103,7 +103,7 @@ Polymer('three-viewer', {
 			renderer.setSize(this.width, this.height);
 			renderer.shadowMapEnabled = true;
 			renderer.shadowMapAutoUpdate = true;
-			//renderer.shadowMapSoft = true;
+			renderer.shadowMapSoft = true;
 			renderer.shadowMapType = THREE.PCFShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
 			
 			this.convertColor(this.bg)
@@ -193,6 +193,8 @@ Polymer('three-viewer', {
 				dirLight.shadowDarkness = 0.35;
         dirLight.onlyShadow = true;
 
+      var shadowConst = 0.8;
+      dirLight.shadowDarkness = shadowConst * dirLight.intensity;
 
       //3 point lighting test
       var pLigthIntensity = 0.5;
