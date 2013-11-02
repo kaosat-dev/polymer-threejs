@@ -126,6 +126,7 @@ Polymer('three-editor', {
   selectedObjectChanged:function(oldSelection)
   {
     newSelection = this.selectedObject;
+    console.log("selection change");
     if(oldSelection != null && newSelection != null)
     {    
       console.log("SELECTED object changed",this.selectedObject.name,"OLD",oldSelection.name);
@@ -227,6 +228,8 @@ Polymer('three-editor', {
       this.undos.pop();
       this.redos.unshift(operation);
     }
+    event.preventDefault();
+    event.stopPropagation();
     
   },
   historyRedo:function(event, detail, sender)
@@ -242,6 +245,8 @@ Polymer('three-editor', {
       operation.redo();
       this.undos.push(operation);
     }
+    event.preventDefault();
+    event.stopPropagation();
   }
 
 

@@ -368,9 +368,6 @@ Polymer('three-viewer', {
 			// delta = change in time since last call (in seconds)
 			var delta = this.clock.getDelta(); 
 			this.controls.update(); 
-      try{
-      this.selectionHelper.camera = camera;}
-      catch(error){}
 			
 			if(this.showStats == true && this.$.stats !== undefined)
 			{
