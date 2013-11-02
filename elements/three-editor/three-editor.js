@@ -166,17 +166,12 @@ Polymer('three-editor', {
     }
 	},
   //TODO: move this, and the html parts to a different web component
-  onHistoryItemTapped:function(event, detail, sender)
+  historyUndo:function(event, detail, sender)
   {
-     var model = sender.templateInstance_.model;
-     /*console.log("model", model);
-     console.log("dfsf", event.target.templateInstance);
-     var model2 = event.target.templateInstance.model;
-     console.log("model2", model2);*/
+    var model = sender.templateInstance_.model;
     var selectedOperation = model.operation;
     var endIndex = selectedOperation.index;
     var startIndex = (this.undos.length-1);
-    //console.log("startIndex",startIndex,"endIndex",endIndex);
     for(var i=startIndex; i>=endIndex ; i--)
     {
       var operation = this.undos[i];
