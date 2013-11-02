@@ -15,9 +15,13 @@ Polymer('three-viewer', {
 		showShadows:true,
 		showStats: false,
 		showAxes:true,
+
 		projection:"perspective",
 		orientation:"diagonal",
 		cameraUp : [0,0,1],
+
+    //postprocessing
+    postProcess:false,
 
     //for interactions, perhaps move this to a different component
     selectedObject:null,
@@ -86,6 +90,7 @@ Polymer('three-viewer', {
       this.setupScene();
 			this.setupLights();
 			this.setupControls();
+      this.setupPostProcess();
 			
 			//move these ???
       this.scene.add(this.rootAssembly); //entry point to store meshes
@@ -138,7 +143,7 @@ Polymer('three-viewer', {
 			spotLight.shadowCameraFov =60;
 			spotLight.shadowMapBias = 0.0039;
 			spotLight.shadowMapDarkness = 0.5;
-			shadowResolution = 512; //parseInt(@settings.shadowResolution.split("x")[0])
+			shadowResolution = 512; //parseInt(this.settings.shadowResolution.split("x")[0])
 			spotLight.shadowMapWidth = shadowResolution
 			spotLight.shadowMapHeight = shadowResolution
 			spotLight.castShadow = true*/
@@ -260,40 +265,51 @@ Polymer('three-viewer', {
 		},
     setupPostProcess:function()
     {
-        if(this.renderer instanceof THREE.WebGLRenderer)
+        if(this.renderer instanceof THREE.WebGLRenderer && this.postProcess == true)
         {
-          /*EffectComposer = require 'EffectComposer'
-          DotScreenPass = require 'DotScreenPass'
-          FXAAShader = require 'FXAAShader'
-          EdgeShader2 = require 'EdgeShader2'
-          EdgeShader = require 'EdgeShader'
-          VignetteShader = require 'VignetteShader'
-          BlendShader = require 'BlendShader'
-          BrightnessContrastShader = require 'BrightnessContrastShader'
-        
-          AdditiveBlendShader = require 'AdditiveBlendShader'
-          EdgeShader3 = require 'EdgeShader3'
-        
           //shaders, post processing etc
-          resolutionBase = 1
-          resolutionMultiplier = 1.5
-        
-          @fxaaResolutionMultiplier = resolutionBase/resolutionMultiplier
-          composerResolutionMultiplier = resolutionBase*resolutionMultiplier
-        
+          var resolutionBase = 1;
+          var resolutionMultiplier = 1.5;
+
           //various passes and rtts
-          renderPass = new THREE.RenderPass(this.scene, this.camera)
-          copyPass = new THREE.ShaderPass( THREE.CopyShader )
+          var renderPass = new THREE.RenderPass(this.scene, this.camera)
+          var copyPass = new THREE.ShaderPass( THREE.CopyShader )
         
-          this.edgeDetectPass3 = new THREE.ShaderPass(THREE.EdgeShader3)
+          /*this.edgeDetectPass3 = new THREE.ShaderPass(THREE.EdgeShader3)
         
-          contrastPass = new THREE.ShaderPass(THREE.BrightnessContrastShader)
+          var contrastPass = new THREE.ShaderPass(THREE.BrightnessContrastShader)
           contrastPass.uniforms['contrast'].value=0.5
-          contrastPass.uniforms['brightness'].value=-0.4
+          contrastPass.uniforms['brightness'].value=-0.4*/
           
-          vignettePass = new THREE.ShaderPass(THREE.VignetteShader)
+          var vignettePass = new THREE.ShaderPass(THREE.VignetteShader)
           vignettePass.uniforms["offset"].value = 0.4;
-          vignettePass.uniforms["darkness"].value = 5;*/
+          vignettePass.uniforms["darkness"].value = 5;
+
+          this.fxaaResolutionMultiplier = resolutionBase/resolutionMultiplier;
+          var composerResolutionMultiplier = resolutionBase*resolutionMultiplier;
+
+          this.finalComposer = new THREE.EffectComposer( this.renderer )
+
+          /*
+          var renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
+          var renderTarget = new THREE.WebGLRenderTarget( this.width , this.height, renderTargetParameters );
+        
+          this.finalComposer = new THREE.EffectComposer( this.renderer , renderTarget );          
+          this.finalComposer.setSize(this.hRes, this.vRes);
+          */
+          //prepare the final render passes
+          this.finalComposer.addPass( renderPass );
+          //this.finalComposer.addPass(this.fxAAPass)
+
+          //blend in the edge detection results
+          /*
+          var effectBlend = new THREE.ShaderPass( THREE.AdditiveBlendShader, "tDiffuse1" );
+          effectBlend.uniforms[ 'tDiffuse2' ].value = this.normalComposer.renderTarget2;
+          effectBlend.uniforms[ 'tDiffuse3' ].value = this.depthComposer.renderTarget2;
+          this.finalComposer.addPass( effectBlend );*/
+          this.finalComposer.addPass( vignettePass );
+          //make sure the last pass renders to screen
+          this.finalComposer.passes[this.finalComposer.passes.length-1].renderToScreen = true;
         }
     },
 		resizeHandler: function() {
@@ -313,7 +329,7 @@ Polymer('three-viewer', {
         		this.dpr = window.devicePixelRatio;
 			}
         	
-    	//#@width = Math.floor(window.innerWidth*@dpr) - (westWidth + eastWidth)
+    	//#this.width = Math.floor(window.innerWidth*this.dpr) - (westWidth + eastWidth)
       
       //BUG in firefox: dpr is not 1 on desktop, scaling issue ensue, so forcing to "1"
       this.dpr=1;
@@ -363,7 +379,30 @@ Polymer('three-viewer', {
 		},
 		render: function() 
 		{	
-			this.renderer.render( this.scene, this.camera );
+			
+      if (this.renderer instanceof THREE.WebGLRenderer && this.postProcess == true)
+      {
+        //necessary hack for effectomposer
+        THREE.EffectComposer.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
+        THREE.EffectComposer.quad = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), null );
+        THREE.EffectComposer.scene = new THREE.Scene();
+        THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
+
+        /*
+        originalStates = helpers.toggleHelpers(this.scene)#hide helpers from scene
+        this.depthComposer.render()
+        this.normalComposer.render()
+        helpers.enableHelpers(this.scene, originalStates)#show previously shown helpers again
+        
+        this.finalComposer.passes[this.finalComposer.passes.length-1].uniforms[ 'tDiffuse2' ].value = this.normalComposer.renderTarget2
+        this.finalComposer.passes[this.finalComposer.passes.length-1].uniforms[ 'tDiffuse3' ].value = this.depthComposer.renderTarget2*/
+        this.finalComposer.render();
+      }
+      else
+      {
+        this.renderer.render( this.scene, this.camera );
+      }
+
 		},
 		//utilities
 		convertColor: function(hex)
@@ -433,7 +472,7 @@ Polymer('three-viewer', {
 			{
           this.camera.toPerspective();
 					this.selectionHelper.isOrtho = false;
-          //@camera.setZoom(1);
+          //this.camera.setZoom(1);
 			}
 		},
 		orientationChanged:function()

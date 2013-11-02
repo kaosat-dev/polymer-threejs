@@ -1,7 +1,5 @@
 
-
 THREE.TextDrawHelper = function () {
-	
 }
 
 THREE.TextDrawHelper.prototype.drawText = function(text, displaySize, background, scale) {
@@ -83,7 +81,7 @@ THREE.TextDrawHelper.prototype.drawTextOnPlane = function(text, size) {
   return plane;
 };
 
-//THREE.TextDrawHelper.prototype = Object.create( THREE.Object3D.prototype );
+THREE.TextDrawHelper.prototype = Object.create( THREE.Object3D.prototype );
 
 
 THREE.CustomGridHelper = function ( size, step , upVector, color, opacity, text, textColor, textPosition) {
