@@ -200,8 +200,7 @@ function SelectionHelper(options) {
 		//var isOrtho = isOrtho || false;
 		var isOrtho = isOrtho || this.isOrtho;
 		var intersected, intersects, raycaster, v, _ref;
-
-		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 0.5);
+		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 1);
 		if( !isOrtho)
 		{
 		  this.projector.unprojectVector(v, this.camera);
