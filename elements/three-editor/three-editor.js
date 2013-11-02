@@ -86,13 +86,46 @@ Polymer('three-editor', {
       try{this.transformControls.update();}catch(error){}
 	},
   //attribute change handlers
-  highlightedObjectChanged:function()
+  highlightedObjectChanged:function(oldHovered)
   {
+      this.selectionColor = 0xfffccc;
+		  this.outlineColor = 0xffc200;
+      function validForOutline(selection)
+      {
+        return (!(selection.hoverOutline != null) && !(selection.outline != null) && !(selection.name === "hoverOutline") && !(selection.name === "boundingCage") && !(selection.name === "selectOutline"))
+      }
+
+      var curHovered = this.highlightedObject;
+
+      if (curHovered != null )
+      {
+        var hoverEffect = new THREE.Object3D();
+        var outline, outlineMaterial;
+        curHovered.currentHoverHex = curHovered.material.color.getHex();
+        curHovered.material.color.setHex(this.selectionColor);
+        outlineMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffc200,
+            side: THREE.BackSide
+          });
+        outline = new THREE.Mesh(curHovered.geometry.clone(), outlineMaterial);
+        outline.scale.multiplyScalar(1.03);
+        outline.name = "hoverOutline";
+        curHovered.hoverOutline = outline;
+        curHovered.add(outline);
+      }
+      if(oldHovered != null)
+      {
+        if (oldHovered.hoverOutline != null)
+        {
+          oldHovered.material.color.setHex(oldHovered.currentHoverHex);
+          oldHovered.remove(oldHovered.hoverOutline);
+          oldHovered.hoverOutline = null;
+        }
+      }
   },
   selectedObjectChanged:function(oldSelection)
   {
     newSelection = this.selectedObject;
-    console.log("selection change");
     if(oldSelection != null && newSelection != null)
     {    
       console.log("SELECTED object changed",this.selectedObject.name,"OLD",oldSelection.name);
@@ -103,6 +136,11 @@ Polymer('three-editor', {
       this.transformControls.detach();
       this.scene.remove(this.transformControls);
       oldSelection.controls = null;
+
+      //oldSelection.remove(oldSelection.cage);
+      oldSelection.remove(oldSelection.outline);
+      oldSelection.cage = null;
+      oldSelection.outline = null;
     }
     //add to new selection
     if(newSelection != null)
@@ -110,6 +148,16 @@ Polymer('three-editor', {
         this.transformControls.attach( newSelection );
         this.scene.add(this.transformControls);
         newSelection.controls = this.transformControls;
+
+        var outlineMaterial = new THREE.MeshBasicMaterial({
+          color: 0xff0000,//0xffc200,
+          side: THREE.BackSide
+        });
+        outline = new THREE.Mesh(newSelection.geometry.clone(), outlineMaterial);
+        outline.name = "selectOutline";
+        outline.scale.multiplyScalar(1.03);
+        newSelection.outline = outline;
+        newSelection.add(outline);
     }
   },
   undo:function()

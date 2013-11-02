@@ -55,6 +55,7 @@ function SelectionHelper(options) {
     var outline, outlineMaterial;
     if (selection != null) {
       this.currentHover = selection;
+      /*
       if (!(selection.hoverOutline != null) && !(selection.outline != null) && !(selection.name === "hoverOutline") && !(selection.name === "boundingCage") && !(selection.name === "selectOutline")) {
         selection.currentHoverHex = selection.material.color.getHex();
         selection.material.color.setHex(this.selectionColor);
@@ -67,7 +68,7 @@ function SelectionHelper(options) {
         outline.name = "hoverOutline";
         selection.hoverOutline = outline;
         selection.add(outline);
-      }
+      }*/
       return this.dispatchEvent({
         type: 'hoverIn',
         selection: selection
@@ -77,11 +78,11 @@ function SelectionHelper(options) {
 
   SelectionHelper.prototype._unHover = function() {
     if (this.currentHover) {
-      if (this.currentHover.hoverOutline != null) {
+      /*if (this.currentHover.hoverOutline != null) {
         this.currentHover.material.color.setHex(this.currentHover.currentHoverHex);
         this.currentHover.remove(this.currentHover.hoverOutline);
         this.currentHover.hoverOutline = null;
-      }
+      }*/
       this.currentHover = null;
       return this.dispatchEvent({
         type: 'hoverOut',
@@ -107,7 +108,7 @@ function SelectionHelper(options) {
     selection.cage = cage;
     selection.add(cage);*/
 		
-    outlineMaterial = new THREE.MeshBasicMaterial({
+    /*outlineMaterial = new THREE.MeshBasicMaterial({
       color: 0xff0000,//0xffc200,
       side: THREE.BackSide
     });
@@ -115,7 +116,7 @@ function SelectionHelper(options) {
     outline.name = "selectOutline";
     outline.scale.multiplyScalar(1.03);
     selection.outline = outline;
-    selection.add(outline);
+    selection.add(outline);*/
     return this.dispatchEvent({
       type: 'selected',
       selection: selection
@@ -126,11 +127,11 @@ function SelectionHelper(options) {
     var selection;
     if (this.currentSelect) {
       selection = this.currentSelect;
-      selection.remove(selection.cage);
+      /*selection.remove(selection.cage);
       selection.remove(selection.outline);
       selection.cage = null;
       selection.outline = null;
-      this.currentSelect = null;
+      this.currentSelect = null;*/
       return this.dispatchEvent({
         type: 'unselected',
         selection: selection
