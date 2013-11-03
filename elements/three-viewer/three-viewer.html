@@ -17,10 +17,12 @@
 <script src="./vendor/postProcessing/ShaderPass.js"></script>
 <script src="./vendor/postProcessing/MaskPass.js"></script>
 <script src="./vendor/postProcessing/shaders/CopyShader.js"></script>
+
 <script src="./vendor/postProcessing/shaders/VignetteShader.js"></script>
+<script src="./vendor/postProcessing/VignetteEffect.js"></script>
 
 <polymer-element name="three-viewer" extends="div" tabindex="0" 
-attributes="showStats showShadows showGrid showAxes viewAngle autoRotate projection orientation cameraUp postProcess" on-keydown="keyDown" >
+attributes="showStats showShadows showGrid showAxes viewAngle autoRotate projection orientation cameraUp postProcess" on-keyup="keyUp" on-keydown="keyDown" >
 	<template>
 		<link rel="stylesheet" type="text/css" href="three-viewer.css">
 		<div class="wrapper"> 

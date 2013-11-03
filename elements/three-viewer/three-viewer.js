@@ -281,9 +281,7 @@ Polymer('three-viewer', {
           contrastPass.uniforms['contrast'].value=0.5
           contrastPass.uniforms['brightness'].value=-0.4*/
           
-          var vignettePass = new THREE.ShaderPass(THREE.VignetteShader)
-          vignettePass.uniforms["offset"].value = 0.4;
-          vignettePass.uniforms["darkness"].value = 5;
+          var vignetteEffect = new VignetteEffect();
 
           this.fxaaResolutionMultiplier = resolutionBase/resolutionMultiplier;
           var composerResolutionMultiplier = resolutionBase*resolutionMultiplier;
@@ -307,7 +305,7 @@ Polymer('three-viewer', {
           effectBlend.uniforms[ 'tDiffuse2' ].value = this.normalComposer.renderTarget2;
           effectBlend.uniforms[ 'tDiffuse3' ].value = this.depthComposer.renderTarget2;
           this.finalComposer.addPass( effectBlend );*/
-          this.finalComposer.addPass( vignettePass );
+          this.finalComposer.addPass( vignetteEffect.pass );
           //make sure the last pass renders to screen
           this.finalComposer.passes[this.finalComposer.passes.length-1].renderToScreen = true;
         }
@@ -516,82 +514,74 @@ Polymer('three-viewer', {
 		},
     pointerMove:function(event)
     {
-      //TODO: bingo ! the issue with picking comes from auto rotate!  why ?? investigate !
       //console.log("I moved",event);
       var x = event.impl.offsetX;
       var y = event.impl.offsetY;
 
-      var intersects, projector, raycaster, v;
-      v = new THREE.Vector3((x / this.width) * 2 - 1, -(y / this.height) * 2 + 1, 1);
-      //console.log("v",x,y, this.width, this.height);
-      /*
-      projector = new THREE.Projector();
-      projector.unprojectVector(v, this.camera);
-      raycaster = new THREE.Raycaster(this.camera.position, v.sub(this.camera.position).normalize());
-      
-      intersects = raycaster.intersectObjects( this.scene.children, true );// raycaster.intersectObjects(this.rootAssembly, true);     
-      //console.log(intersects);
-      if (intersects.length > 0) {
-       // console.log("intersects!!");
-      }*/
-
-      //var pointer = this.pointers[event.pointerId];
-      //todo: normalize event ? 
-      
-      //this.camera.setSize(this.width,this.height);//attempt
-      //this.selectionHelper.camera = this.camera;
-
-      //this.selectionHelper.hiearchyRoot=this.rootAssembly.children;//NOT NEEDED ! already has a pointer to the correct data
       this.selectionHelper.viewWidth=this.width;
       this.selectionHelper.viewHeight=this.height;
       this.selectionHelper.highlightObjectAt(x,y);
 
       var currentObj = this.selectionHelper.getObjectAt(x,y);
       this.highlightedObject = currentObj;
-      //console.log("currentObj",currentObj,this.rootAssembly);
     },
     pointerDown:function(event)
     {
-        //console.log("pointer down");
-        var x = event.impl.offsetX;
-        var y = event.impl.offsetY;
+      //console.log("pointer down");
+      var x = event.impl.offsetX;
+      var y = event.impl.offsetY;
 
-        this._actionInProgress = false;
-        this._pushStart = new Date().getTime();
-      
+      this._actionInProgress = true;
+      this._pushStart = new Date().getTime();
+
 			//set focus so keyboard binding works
 			if( document.activeElement != this.impl)
 			{
 				this.focus();
-			}
+      }
+
+      /*
+      if(this.shiftPressed != undefined)
+      {
+        console.log("shift",this.shiftPressed,this._actionInProgress, this.selectedObject != null);
+        if(this._actionInProgress && this.shiftPressed && this.selectedObject != null && !(this.cloningDone) )
+        {
+          console.log("cloned !! ");
+
+          var clone = this.selectedObject.clone();
+          this.addToScene(clone);
+          this.cloningDone = true;
+          this.selectedObject = clone;
+        }
+      }*/
+
     },
     pointerUp:function(event)
     {
-        //console.log("pointer up",event);
-        var x = event.impl.offsetX;
-        var y = event.impl.offsetY;
+      var x = event.impl.offsetX;
+      var y = event.impl.offsetY;
 
-        this._actionInProgress = false;
-        var _pushEnd = new Date().getTime()
-        var _elapsed = _pushEnd - this._pushStart;
-        this._longAction = !(_elapsed <= 125)
+      this._actionInProgress = false;
+      var _pushEnd = new Date().getTime()
+      var _elapsed = _pushEnd - this._pushStart;
+      this._longAction = !(_elapsed <= 125)
 
-        this.selectionHelper.viewWidth=this.width;
-        this.selectionHelper.viewHeight=this.height;
-        var selected = this.selectionHelper.getObjectAt(x,y);
+      this.selectionHelper.viewWidth=this.width;
+      this.selectionHelper.viewHeight=this.height;
+      var selected = this.selectionHelper.getObjectAt(x,y);
 
-        if( selected != null && selected != undefined)
+      if( selected != null && selected != undefined)
+      {
+        this.selectionHelper.selectObjectAt(x,y)
+        this.selectedObject = selected
+      }
+      else
+      {
+        if (this._longAction == false)
         {
-          this.selectionHelper.selectObjectAt(x,y)
-          this.selectedObject = selected
+          this.selectedObject = null;
+					this.selectionHelper._unSelect();
         }
-        else
-        {
-          if (this._longAction == false)
-          {
-            this.selectedObject = null;
-						this.selectionHelper._unSelect();
-          }
-        }
+      }
     }
-  });
+});
