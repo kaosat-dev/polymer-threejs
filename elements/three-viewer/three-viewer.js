@@ -19,6 +19,7 @@ Polymer('three-viewer', {
 		projection:"perspective",
 		orientation:"diagonal",
 		cameraUp : [0,0,1],
+    fullScreen: false,
 
     //postprocessing
     postProcess:false,
@@ -67,6 +68,10 @@ Polymer('three-viewer', {
 			this.setInitialStyle();
 			this.setup();
 			this.animate();
+
+      document.addEventListener("fullscreenchange", function(){console.log("fullScreen changed");}, false);
+      //document.addEventListener("mozfullscreenchange", function(){console.log("f");}, false);
+      //document.addEventListener("webkitfullscreenchange", this.fullScreenChanged.bind(this), false);
 		},
 		ready: function() {
 			console.log("ready");
@@ -340,6 +345,11 @@ Polymer('three-viewer', {
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize( this.width,this.height );
 		},
+    /*
+    fullscreenchangeHandler:function()
+    {
+
+    }*/
 		setInitialStyle:function()
 		{
 			//setup width & height
@@ -382,7 +392,6 @@ Polymer('three-viewer', {
         THREE.EffectComposer.quad = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), null );
         THREE.EffectComposer.scene = new THREE.Scene();
         THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
-
         /*
         originalStates = helpers.toggleHelpers(this.scene)#hide helpers from scene
         this.depthComposer.render()
@@ -509,6 +518,25 @@ Polymer('three-viewer', {
     {
        console.log("SELECTED object changed",this.selectedObject);
     },
+    fullScreenChanged:function()
+    {
+      console.log("fullScreen",this.fullScreen,!document.fullscreenElement);
+      if(this.fullScreen)
+      {
+        console.log("switching", this, "to fullscreen");
+        var c=this; //document.body;
+        if(this.requestFullScreen)this.requestFullScreen();
+        if(this.webkitRequestFullScreen)this.webkitRequestFullScreen();
+        if(this.mozRequestFullScreen)this.mozRequestFullScreen();
+      }
+      else
+      {
+        if(document.cancelFullScreen) document.cancelFullScreen();
+        if(document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+        if(document.mozCancelFullScreen) document.webkitCancelFullScreen();
+      }
+    },
+    //event handlers
 		keyDown:function(event)
 		{//overidable method stand in
 		},

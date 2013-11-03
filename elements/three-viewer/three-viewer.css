@@ -18,6 +18,22 @@
 	*:unresolved {
 	    opacity: 0;
 	 }
+  :-webkit-full-screen 
+  {
+    width:100% !important;
+    height:100% !important;
+    left:0px !important;
+    top:0px !important;
+  }  
+
+  *:-webkit-full-screen	-moz-full-screen 
+   {
+      width:100%;
+      height:100%;
+      left:0px;
+      top:0px;
+      background-color:red;
+   }
 }
 
 .unselectable

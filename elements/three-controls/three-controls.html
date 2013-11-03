@@ -1,4 +1,4 @@
-<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes projection orientation" tabindex="0">
+<polymer-element name="three-controls" extends="div" attributes="show autoRotate showStats showGrid showShadows showAxes projection orientation fullScreen" tabindex="0">
 	<style>
 		table
 		{
@@ -42,7 +42,6 @@
 							<option value="perspective" >perspective</option>
 							<option value="orthographic">orthographic</option>
 						</select>
-
 					</td>
 					<td>
 						<select name="orientation" value="{{orientation}}">
@@ -59,6 +58,10 @@
 					<td>
 						<input type="button" name="capture" value="screencap" class="screencap uicons" rel="tooltip" title="take a screenshot" on-click="onCapture" />
 						<label for="capture"></label>
+					</td>
+          <td>
+						<input type="checkbox" checked="{{fullScreen}}" name="fullScreen" value="fullscreen" class="fullscreen uicons" rel="tooltip" title="fullscreen" />
+						<label for="fullScreen"></label>
 					</td>
 				</tr>
 			</table> 

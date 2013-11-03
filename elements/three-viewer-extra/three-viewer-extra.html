@@ -8,12 +8,13 @@
 		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
 		<div id="wrapper" class="wrapper" touch-action="none" > 
 			<div id="viewer" on-keydown="keyDown"  on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp" ></div>
-			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" 
-			showAxes="{{showAxes}}" projection="{{projection}}" orientation="{{orientation}}" on-capture-request="captureRequest" ></three-controls>
+
+			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" showAxes="{{showAxes}}" projection="{{projection}}" orientation="{{orientation}}" on-capture-request="captureRequest" fullScreen="{{fullScreen}}"></three-controls>
+
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
+
 			<!--for downloads-->
 			<a style="position:absolute;top:10px;" id="downloadAutoLink" title="Test.png"></a>
-
 			<!--for object hover/selection overlay-->
 			<div id="infoOverlay" style="position:absolute; display:block; z-index:9999; color:red; top:150px; left:100px; visibility:hidden">Object Name overlay</div>
 		</div>
