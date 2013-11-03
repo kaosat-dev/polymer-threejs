@@ -49,12 +49,55 @@ Rotation.prototype.redo = function()
     this.target.rotation.z += this.value.z;
 }
 
-//manager
-CommandManager = function ( )
+Deletion = function (target, parentObject)
 {
-  //undos:[],//for undo redo
-  //redos:[]
+  Operation.call( this );
+  this.type = "deletion";
+  this.target = target;
+  this.parentObject = parentObject;
+}
+Deletion.prototype = Object.create( Operation.prototype );
+
+Deletion.prototype.undo = function()
+{
+    this.parentObject.add(this.target);
+}
+
+Deletion.prototype.redo = function()
+{
+  this.parentObject.remove(this.target);
 }
 
 
+
+//manager
+CommandManager = function ( )
+{
+  this.undos=[];//for undo redo
+  this.redos=[];
+}
+
+CommandManager.prototype.addOperation=function(operation)
+{
+  this.undos.push(operation);
+  this.redos = [];
+  operation.index = this.undos.length - 1;
+}
+
+CommandManager.prototype.undo=function(operation)
+{
+  var operation = operation || this.undos.pop();
+  if(operation === undefined) return;
+  operation.undo();
+  this.redos.unshift(operation);
+  console.log("i want to undo in cmd mgr",this.undos);
+}
+
+CommandManager.prototype.redo=function(operation)
+{
+  var operation = operation || this.redos.shift();
+  if(operation === undefined) return;
+  operation.redo();
+  this.undos.push(operation);
+}
 

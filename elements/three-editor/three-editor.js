@@ -3,9 +3,17 @@ Polymer('three-editor', {
   undos:[],//for undo redo
   redos:[],
   someValue: 535,//for testing
+  created:function()
+  {
+    this.super();
+    this.commandManager = new CommandManager();
+    this.undos = this.commandManager.undos;
+    this.redos = this.commandManager.redos;
+  },
   ready:function()
   {
     this.super();
+
     console.log("this.$.selectOverlay",this.$.toto);
     var delegate = {
       getBinding: function(model, path, name, node) {
@@ -42,9 +50,10 @@ Polymer('three-editor', {
     console.log("editor entered view");
     //if mousedown PLUS move NOT over object : rotate/pan, do not deselect current obect
     this.transformControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
-
+    
     function onControlsChange(event)
     {
+        //console.log("pouet");
         this.controls.enabled = true;
         if(this.transformControls.axis != undefined)
         {
@@ -125,11 +134,14 @@ Polymer('three-editor', {
   },
   selectedObjectChanged:function(oldSelection)
   {
-    newSelection = this.selectedObject;
-    console.log("selection change");
+    var newSelection = this.selectedObject;
+    this.selectObject(newSelection, oldSelection);
+  },
+  selectObject:function(newSelection, oldSelection)
+  {
     if(oldSelection != null && newSelection != null)
     {    
-      console.log("SELECTED object changed",this.selectedObject.name,"OLD",oldSelection.name);
+      console.log("SELECTED object changed",newSelection.name,"OLD",oldSelection.name);
     }
     //remove from old selection
     if(oldSelection != null)
@@ -163,15 +175,20 @@ Polymer('three-editor', {
   },
   undo:function()
   {
+    this.commandManager.undo();
+
+    /*
     var operation = this.undos.pop();
     if(operation === undefined) return;
     operation.undo();
     //this.redos.push(operation);
     this.redos.unshift(operation);
-    console.log("i want to undo",this.undos);
+    console.log("i want to undo",this.undos);*/
   },
   redo:function()
   {
+    this.commandManager.redo();
+    return;
     console.log("i want to redo");
         var operation = this.redos.shift();
         if(operation === undefined) return;
@@ -186,13 +203,26 @@ Polymer('three-editor', {
     var ctrlPressed = event.impl.ctrlKey;
     var shiftPressed= event.impl.shiftKey;
 
+    //TODO: how to handle using modifiers for duplicating objects (shift + drag  ?)
+    this.shiftPressed = shiftPressed;
+
+
 		//console.log("key pressed",event);
 		if(keyCode == 46) //supr
 		{
 			if(this.selectedObject!=null && this.selectedObject!=undefined)
 			{
 				this.rootAssembly.remove(this.selectedObject);
+        
+        //TODO: need a more generic system to publish operation into the history
+        
+        var operation = new Deletion(this.selectedObject,this.rootAssembly)
+        this.undos.push(operation);
+        this.redos = [];
+        operation.index = this.undos.length - 1;
+      
 				this.selectedObject = null;
+        
 			}
 		}
     //switch between transform modes : temporary
@@ -214,6 +244,11 @@ Polymer('three-editor', {
       this.undo();
     }
 	},
+  keyUp:function()
+  {
+      this.cloningDone = false;
+      this.shiftPressed = false;
+  },
   //TODO: move this, and the html parts to a different web component
   historyUndo:function(event, detail, sender)
   {

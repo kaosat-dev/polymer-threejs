@@ -1117,11 +1117,13 @@ THREE.TransformControls = function ( camera, domElement ) {
           var tmp = new THREE.Vector3(oldRotationEuler.x,oldRotationEuler.y,oldRotationEuler.z);
           var tmp2 = new THREE.Vector3(scope.object.rotation.x,scope.object.rotation.y,scope.object.rotation.z);
           oo.subVectors(tmp2,tmp);
-          var rotation = new THREE.Euler(oo.x, oo.y, oo.z);
+          var rotation_ = new THREE.Euler(oo.x, oo.y, oo.z);
+
+          console.log("rotation", rotation);
           
           if (!rotation.equals( new THREE.Euler() ))
           {
-            var rotationEvent = { type: "transform",transform:"rotate",value:rotation };
+            var rotationEvent = { type: "transform",transform:"rotate",value:rotation_ };
             scope.dispatchEvent( rotationEvent );
           }
           
