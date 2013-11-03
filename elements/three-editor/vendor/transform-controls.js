@@ -1126,7 +1126,19 @@ THREE.TransformControls = function ( camera, domElement ) {
             var rotationEvent = { type: "transform",transform:"rotate",value:rotation_ };
             scope.dispatchEvent( rotationEvent );
           }
-          
+      }
+      else if(_mode == "scale")
+      {
+        var scaling = new THREE.Vector3();
+        scaling.subVectors(scope.object.scale, oldScale);
+        //var scaleDiff = scope.object.scale oldScale;
+
+        //console.log("scaleDiff", scaleDiff,scale, oldScale,scope.object.scale);
+        if (!scaling.equals( new THREE.Vector3() ))
+        {
+          var scaleEvent = { type: "transform",transform:"scale",value:scaling };
+          scope.dispatchEvent( scaleEvent );
+        }
       }
     }
 

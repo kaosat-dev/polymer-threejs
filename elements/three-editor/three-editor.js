@@ -1,14 +1,10 @@
 
 Polymer('three-editor', {
-  undos:[],//for undo redo
-  redos:[],
   someValue: 535,//for testing
   created:function()
   {
     this.super();
     this.commandManager = new CommandManager();
-    this.undos = this.commandManager.undos;
-    this.redos = this.commandManager.redos;
   },
   ready:function()
   {
@@ -75,15 +71,17 @@ Polymer('three-editor', {
           //console.log("controls translate",event.value);
           operation = new Translation(event.value,this.selectedObject);
         break;
+        case "scale":
+          //console.log("controls scale",event.value);
+          operation = new Scaling(event.value,this.selectedObject);
+        break;
       }
       
       if( operation != null)
       {
-        this.undos.push(operation);
-        this.redos = [];
+        this.commandManager.addOperation( operation );
         //hack, have not found a way to get a template instance (repeat) index, if there is one
-        operation.index = this.undos.length - 1;
-        //console.log("editor operations",this.undos);
+        //operation.index = this.undos.length - 1;
       }
     }
     this.transformControls.addEventListener( 'transform', onObjectTranform.bind(this) )
@@ -176,24 +174,10 @@ Polymer('three-editor', {
   undo:function()
   {
     this.commandManager.undo();
-
-    /*
-    var operation = this.undos.pop();
-    if(operation === undefined) return;
-    operation.undo();
-    //this.redos.push(operation);
-    this.redos.unshift(operation);
-    console.log("i want to undo",this.undos);*/
   },
   redo:function()
   {
     this.commandManager.redo();
-    return;
-    console.log("i want to redo");
-        var operation = this.redos.shift();
-        if(operation === undefined) return;
-        operation.redo();
-        this.undos.push(operation);
   },
   //attribut change handlers
   //event handlers
@@ -206,23 +190,15 @@ Polymer('three-editor', {
     //TODO: how to handle using modifiers for duplicating objects (shift + drag  ?)
     this.shiftPressed = shiftPressed;
 
-
 		//console.log("key pressed",event);
 		if(keyCode == 46) //supr
 		{
 			if(this.selectedObject!=null && this.selectedObject!=undefined)
 			{
 				this.rootAssembly.remove(this.selectedObject);
-        
         //TODO: need a more generic system to publish operation into the history
-        
-        var operation = new Deletion(this.selectedObject,this.rootAssembly)
-        this.undos.push(operation);
-        this.redos = [];
-        operation.index = this.undos.length - 1;
-      
+        this.commandManager.addOperation( new Deletion(this.selectedObject,this.rootAssembly) );
 				this.selectedObject = null;
-        
 			}
 		}
     //switch between transform modes : temporary
@@ -230,6 +206,12 @@ Polymer('three-editor', {
     {
         console.log("set to rotate");
         this.transformControls.setMode("rotate");
+    }
+    else if (keyCode == 83)
+    {
+      console.log("set to scale");
+      this.transformControls.setMode("scale");
+      this.transformControls.setSpace("local");
     }
     else if (keyCode == 84)
     {
@@ -249,37 +231,28 @@ Polymer('three-editor', {
       this.cloningDone = false;
       this.shiftPressed = false;
   },
+
   //TODO: move this, and the html parts to a different web component
   historyUndo:function(event, detail, sender)
   {
     var model = sender.templateInstance_.model;
     var selectedOperation = model.operation;
-    var endIndex = selectedOperation.index;
-    var startIndex = (this.undos.length-1);
-    for(var i=startIndex; i>=endIndex ; i--)
-    {
-      var operation = this.undos[i];
-      operation.undo();
-      this.undos.pop();
-      this.redos.unshift(operation);
-    }
+    var operationIndex = selectedOperation.index;
+    var howMany = (this.commandManager.undos.length-1)-operationIndex+1;
+
+    this.commandManager.undoMultiple(howMany);
+
     event.preventDefault();
     event.stopPropagation();
-    
   },
   historyRedo:function(event, detail, sender)
   {
     var model = event.target.templateInstance.model;
     var selectedOperation = model.operation;
-    var operationIndex = this.redos.indexOf(selectedOperation);
-    var redos = this.redos.splice(0, operationIndex+1);
+    var operationIndex = this.commandManager.redos.indexOf(selectedOperation);
 
-    for(var i=0;i<redos.length;i++)
-    {
-      var operation = redos[i];
-      operation.redo();
-      this.undos.push(operation);
-    }
+    this.commandManager.redoMultiple(operationIndex+1);
+
     event.preventDefault();
     event.stopPropagation();
   }

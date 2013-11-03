@@ -35,13 +35,13 @@
         {{operation in undos}}
         repeat="{{i in names.asMap().keys)}} //THIS DOES NOT WORK either...">
         -->
-        <template repeat="{{operation in undos}}">
+        <template repeat="{{operation in commandManager.undos}}">
           <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyUndo">
            {{operation.index}} {{operation.type}}
           </div>
         </template>
         <!--redos-->
-        <template repeat="{{operation in redos}}">
+        <template repeat="{{operation in commandManager.redos}}">
           <div style="border:red;display:block;background-color:rgba(219, 206, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyRedo">
             {{operation.index}}  {{operation.type}}
           </div>

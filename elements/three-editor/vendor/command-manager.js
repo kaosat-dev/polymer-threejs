@@ -49,6 +49,29 @@ Rotation.prototype.redo = function()
     this.target.rotation.z += this.value.z;
 }
 
+Scaling = function ( value, target)
+{
+  Operation.call( this );
+  this.type = "scaling";
+  this.value = value;
+  this.target = target;
+}
+Scaling.prototype = Object.create( Operation.prototype );
+
+Scaling.prototype.undo = function()
+{
+  this.target.scale.x -= this.value.x;
+  this.target.scale.y -= this.value.y;
+  this.target.scale.z -= this.value.z;
+}
+
+Scaling.prototype.redo = function()
+{
+  this.target.scale.x += this.value.x;
+  this.target.scale.y += this.value.y;
+  this.target.scale.z += this.value.z;
+}
+
 Deletion = function (target, parentObject)
 {
   Operation.call( this );
@@ -86,11 +109,30 @@ CommandManager.prototype.addOperation=function(operation)
 
 CommandManager.prototype.undo=function(operation)
 {
-  var operation = operation || this.undos.pop();
+  if(operation !== undefined)
+  {
+    this.undos.pop();
+  }else
+  {
+    var operation = this.undos.pop();
+  }
+  //var operation = operation || this.undos.pop();
   if(operation === undefined) return;
   operation.undo();
   this.redos.unshift(operation);
-  console.log("i want to undo in cmd mgr",this.undos);
+  console.log("undo in cmd mgr",this.undos);
+
+  /*operation.undo();
+      this.undos.pop();
+      this.redos.unshift(operation);*/
+}
+
+CommandManager.prototype.undoMultiple=function(howMany)
+{
+  for(var i=0;i<howMany;i++)
+  {
+    this.undo();
+  }
 }
 
 CommandManager.prototype.redo=function(operation)
@@ -99,5 +141,14 @@ CommandManager.prototype.redo=function(operation)
   if(operation === undefined) return;
   operation.redo();
   this.undos.push(operation);
+  console.log("redo in cmd mgr",this.undos);
+}
+
+CommandManager.prototype.redoMultiple=function(howMany)
+{
+  for(var i=0;i<howMany;i++)
+  {
+    this.redo();
+  }
 }
 
