@@ -69,9 +69,10 @@ Polymer('three-viewer', {
 			this.setup();
 			this.animate();
 
-      document.addEventListener("fullscreenchange", function(){console.log("fullScreen changed");}, false);
-      //document.addEventListener("mozfullscreenchange", function(){console.log("f");}, false);
-      //document.addEventListener("webkitfullscreenchange", this.fullScreenChanged.bind(this), false);
+      if (this.requestFullscreen) document.addEventListener("fullscreenchange", this.fullScreenChangeHandler.bind(this), false);
+      if (this.mozRequestFullScreen) document.addEventListener("mozfullscreenchange", this.fullScreenChangeHandler.bind(this), false);
+      if (this.webkitRequestFullScreen) document.addEventListener("webkitfullscreenchange", this.fullScreenChangeHandler.bind(this), false);
+
 		},
 		ready: function() {
 			console.log("ready");
@@ -344,12 +345,18 @@ Polymer('three-viewer', {
       this.camera.setSize(this.width,this.height);
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize( this.width,this.height );
-		},
-    /*
-    fullscreenchangeHandler:function()
-    {
 
-    }*/
+      if(this.renderer instanceof THREE.WebGLRenderer && this.postProcess == true)
+      {
+        this.finalComposer.setSize(this.hRes, this.vRes)
+      }
+		},
+    fullScreenChangeHandler:function()
+    {
+      //workaround to reset this.fullScreen to correct value when pressing exit etc in full screen mode
+      this.fullScreen = !(!document.fullscreenElement &&    // alternative standard method
+      !document.mozFullScreenElement && !document.webkitFullscreenElement);
+    },
 		setInitialStyle:function()
 		{
 			//setup width & height
@@ -520,11 +527,10 @@ Polymer('three-viewer', {
     },
     fullScreenChanged:function()
     {
-      console.log("fullScreen",this.fullScreen,!document.fullscreenElement);
+      //console.log("fullScreen",this.fullScreen,!document.fullscreenElement);
       if(this.fullScreen)
       {
         console.log("switching", this, "to fullscreen");
-        var c=this; //document.body;
         if(this.requestFullScreen)this.requestFullScreen();
         if(this.webkitRequestFullScreen)this.webkitRequestFullScreen();
         if(this.mozRequestFullScreen)this.mozRequestFullScreen();
