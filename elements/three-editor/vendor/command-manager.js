@@ -72,6 +72,26 @@ Scaling.prototype.redo = function()
   this.target.scale.z += this.value.z;
 }
 
+Creation = function (target, parentObject)
+{
+  Operation.call( this );
+  this.type = "creation";
+  this.target = target;
+  this.parentObject = parentObject;
+}
+Creation.prototype = Object.create( Operation.prototype );
+
+Creation.prototype.undo = function()
+{
+    this.parentObject.remove(this.target);
+}
+
+Creation.prototype.redo = function()
+{
+  this.parentObject.add(this.target);
+}
+
+
 Deletion = function (target, parentObject)
 {
   Operation.call( this );

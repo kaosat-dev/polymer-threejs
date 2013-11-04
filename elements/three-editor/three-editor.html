@@ -14,6 +14,12 @@
             <span>Amount: {{someValue}} bla , Twice Amount: {{ 2x: value }} </span>
          </template>
       </div>
+      
+      <div id="contextMenu" style="position:absolute;bottom:0px;right:0px;color:white">
+          <div on-tap="addShape">Add Shape</div>
+          <div on-tap="addAnnotation">Add Annotation</div>
+      </div>
+
       <div id="selectOverlay" style="position:absolute;bottom:0px;right:0px;color:white">
         <template id="test" if="{{ selectedObject != null }}">
           {{selectedObject.name}} P:{{selectedObject.position.x}},{{selectedObject.position.y}},{{selectedObject.position.z}}
@@ -21,6 +27,7 @@
           R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
         </template>
       </div>
+
       <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px;text-align:center;">
         <div>
           <span titme="Undo" style="cursor:pointer" on-tap="undo" >U</span>

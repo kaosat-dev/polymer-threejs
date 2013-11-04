@@ -558,6 +558,8 @@ Polymer('three-viewer', {
 
       var currentObj = this.selectionHelper.getObjectAt(x,y);
       this.highlightedObject = currentObj;
+
+      this._noMove = false;
     },
     pointerDown:function(event)
     {
@@ -565,6 +567,7 @@ Polymer('three-viewer', {
       var x = event.impl.offsetX;
       var y = event.impl.offsetY;
 
+      this._noMove = true;
       this._actionInProgress = true;
       this._pushStart = new Date().getTime();
 
@@ -617,5 +620,11 @@ Polymer('three-viewer', {
 					this.selectionHelper._unSelect();
         }
       }
+      
+      if(_elapsed >= 500 && this._noMove == true)
+      {
+        if(this.longStaticTap) this.longStaticTap(x,y);//TODO: change this into an event ?
+      }
+
     }
 });

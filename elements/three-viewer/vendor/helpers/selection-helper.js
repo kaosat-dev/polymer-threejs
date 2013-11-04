@@ -197,7 +197,6 @@ function SelectionHelper(options) {
 
 
 	SelectionHelper.prototype.pick = function(x,y,isOrtho){
-		//var isOrtho = isOrtho || false;
 		var isOrtho = isOrtho || this.isOrtho;
 		var intersected, intersects, raycaster, v, _ref;
 		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 1);
@@ -213,9 +212,30 @@ function SelectionHelper(options) {
 				var ray = this.projector.pickingRay( v, this.camera );
 				intersects = ray.intersectObjects( this.hiearchyRoot, true );
 		}
-
 		return intersects;
 	};
+
+  SelectionHelper.prototype.getSceneCoords = function(x,y,isOrtho){
+		var isOrtho = isOrtho || this.isOrtho;
+		var raycaster, v, pos;
+		v = new THREE.Vector3((x / this.viewWidth) * 2 - 1, -(y / this.viewHeight) * 2 + 1, 1);
+		if( !isOrtho)
+		{
+		  this.projector.unprojectVector(v, this.camera);
+
+      var dir = v.sub( this.camera.position ).normalize();
+      var distance = - this.camera.position.z / dir.z;
+      var pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
+		}
+		else
+		{
+				// use picking ray since it's an orthographic camera
+				var ray = this.projector.pickingRay( v, this.camera );
+				//intersects = ray.intersectObjects( this.hiearchyRoot, true );
+		}
+		return pos;
+	};
+
 
   SelectionHelper.prototype.isThereObjectAt = function(x, y) {
 		var intersects = this.pick(x,y,false);

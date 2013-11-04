@@ -179,7 +179,6 @@ Polymer('three-editor', {
   {
     this.commandManager.redo();
   },
-  //attribut change handlers
   //event handlers
   keyDown:function(event)
 	{
@@ -231,7 +230,20 @@ Polymer('three-editor', {
       this.cloningDone = false;
       this.shiftPressed = false;
   },
+  longStaticTap:function(x,y)
+  {
+        var coords = this.selectionHelper.getSceneCoords(x,y);
+        console.log("blabla long action adding stuff to scene",coords);
 
+        var cubeGeometry = new THREE.CubeGeometry( 10, 10, 10 ); 
+			  var material = new THREE.MeshLambertMaterial( {color: 0xff0000} ); 
+			  var cube = new THREE.Mesh(cubeGeometry, material);
+        cube.name = "pickerCube";
+			  cube.position.set(coords.x,coords.y,coords.z); 
+        this.addToScene(cube);
+
+        this.commandManager.addOperation(new Creation(cube,this.rootAssembly));
+  },
   //TODO: move this, and the html parts to a different web component
   historyUndo:function(event, detail, sender)
   {
@@ -255,6 +267,20 @@ Polymer('three-editor', {
 
     event.preventDefault();
     event.stopPropagation();
+  },
+  addShape:function(event, detail, sender)
+  {
+    console.log("i want to add shapes");
+  },
+  addAnnotation:function(event, detail, sender)
+  {
+    console.log("i want to add annotation");
+    var x = event.impl.offsetX;
+    var y = event.impl.offsetY;
+    this.selectionHelper.pick(x,y);
+
+    
+  
   }
 
 
