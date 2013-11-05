@@ -266,7 +266,7 @@ Polymer('three-editor', {
 
           var rcoords = parent.worldToLocal(coords);
           mesh.position.set(rcoords.x,rcoords.y,rcoords.z); 
-
+          
           /*
           parent.visible = false;
           this.selectedObject = mesh;
@@ -276,6 +276,9 @@ Polymer('three-editor', {
           mesh.material.wireframe= true;*/
           
           //mesh.position.set(0,0,0); 
+          //this.rootAssembly.add(mesh);
+          console.log("global coords", mesh.localToWorld( mesh.position.clone()  ));
+      
           this.commandManager.addOperation(new Creation(mesh,parent));
         }
 
@@ -315,9 +318,6 @@ Polymer('three-editor', {
     var x = event.impl.offsetX;
     var y = event.impl.offsetY;
     this.selectionHelper.pick(x,y);
-
-    
-  
   }
 
 
