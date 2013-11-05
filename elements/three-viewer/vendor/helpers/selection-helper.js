@@ -212,6 +212,17 @@ function SelectionHelper(options) {
 				var ray = this.projector.pickingRay( v, this.camera );
 				intersects = ray.intersectObjects( this.hiearchyRoot, true );
 		}
+    
+    //TODO: really, find a better way to exclude helper objects
+    for(var i = intersects.length-1; i>=0; i--)
+    {
+      var intersected = intersects[i].object;
+      if (intersected.name === "hoverOutline" || intersected.name === "selectOutline" || intersected.name === "boundingCage")
+      {
+        intersects.splice(i, 1);
+      }
+    }
+
 		return intersects;
 	};
 

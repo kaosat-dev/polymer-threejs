@@ -232,17 +232,54 @@ Polymer('three-editor', {
   },
   longStaticTap:function(x,y)
   {
-        var coords = this.selectionHelper.getSceneCoords(x,y);
-        console.log("blabla long action adding stuff to scene",coords);
+        var pickeds = this.selectionHelper.pick(x,y);
+        
+        if(pickeds.length >0)
+        {
+          var coords = pickeds[0].point;
+          var geometry = new THREE.SphereGeometry( 5, 16, 16 ); 
+        }
+        else
+        {
+          var geometry = new THREE.CubeGeometry( 10, 10, 10 ); 
+          var coords = this.selectionHelper.getSceneCoords(x,y);
+        }
+        console.log("blabla long action adding stuff to scene",coords,pickeds);
 
-        var cubeGeometry = new THREE.CubeGeometry( 10, 10, 10 ); 
 			  var material = new THREE.MeshLambertMaterial( {color: 0xff0000} ); 
-			  var cube = new THREE.Mesh(cubeGeometry, material);
-        cube.name = "pickerCube";
-			  cube.position.set(coords.x,coords.y,coords.z); 
-        this.addToScene(cube);
+			  var mesh = new THREE.Mesh(geometry, material);
+        mesh.name = "pickerCube";
+			  
+        if(pickeds.length  == 0)
+        {
+          this.addToScene( mesh );
+          mesh.position.set(coords.x,coords.y,coords.z); 
+          this.commandManager.addOperation(new Creation(mesh,this.rootAssembly));
+        }
+        else
+        {
+          var parent = pickeds[0].object;
+          parent.add( mesh );
+          parent.material.wireframe = true;
 
-        this.commandManager.addOperation(new Creation(cube,this.rootAssembly));
+          console.log("parent",parent,"current",mesh);
+
+          var rcoords = parent.worldToLocal(coords);
+          mesh.position.set(rcoords.x,rcoords.y,rcoords.z); 
+
+          /*
+          parent.visible = false;
+          this.selectedObject = mesh;
+          mesh.frustumCulled = false;
+          mesh.material.depthTest= false;
+          mesh.material.depthWrite= false;
+          mesh.material.wireframe= true;*/
+          
+          //mesh.position.set(0,0,0); 
+          this.commandManager.addOperation(new Creation(mesh,parent));
+        }
+
+        
   },
   //TODO: move this, and the html parts to a different web component
   historyUndo:function(event, detail, sender)

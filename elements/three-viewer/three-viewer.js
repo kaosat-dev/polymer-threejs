@@ -601,13 +601,18 @@ Polymer('three-viewer', {
       this._actionInProgress = false;
       var _pushEnd = new Date().getTime()
       var _elapsed = _pushEnd - this._pushStart;
-      this._longAction = !(_elapsed <= 125)
+      this._longAction = !(_elapsed <= 125);
+      this._longStaticTap = (_elapsed >= 300 && this._noMove == true);
 
       this.selectionHelper.viewWidth=this.width;
       this.selectionHelper.viewHeight=this.height;
       var selected = this.selectionHelper.getObjectAt(x,y);
 
-      if( selected != null && selected != undefined)
+      if(this._longStaticTap)
+      {
+        if(this.longStaticTap) this.longStaticTap(x,y);//TODO: change this into an event ?
+      }
+      else if( selected != null && selected != undefined)
       {
         this.selectionHelper.selectObjectAt(x,y)
         this.selectedObject = selected
@@ -621,10 +626,7 @@ Polymer('three-viewer', {
         }
       }
       
-      if(_elapsed >= 500 && this._noMove == true)
-      {
-        if(this.longStaticTap) this.longStaticTap(x,y);//TODO: change this into an event ?
-      }
+
 
     }
 });
