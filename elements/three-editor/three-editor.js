@@ -153,9 +153,11 @@ Polymer('three-editor', {
 		{
 			if(this.selectedObject!=null && this.selectedObject!=undefined)
 			{
-				this.rootAssembly.remove(this.selectedObject);
+        var parent = this.selectedObject.parent
+        parent.remove(this.selectedObject);
+				//this.rootAssembly.remove(this.selectedObject);
         //TODO: need a more generic system to publish operation into the history
-        this.$.commandManager.addOperation( new Deletion(this.selectedObject,this.rootAssembly) );
+        this.$.commandManager.addOperation( new Deletion(this.selectedObject,parent) );
 				this.selectedObject = null;
 			}
 		}
@@ -182,6 +184,12 @@ Polymer('three-editor', {
     else if(keyCode==90 && ctrlPressed) {
       // ctrl+z was typed.
       this.undo();
+    }
+    console.log("keyCode", keyCode);
+     if(keyCode == 87)//W
+    {
+      console.log("go fullscreen");
+      this.fullScreen= !this.fullScreen;
     }
 	},
   keyUp:function()
