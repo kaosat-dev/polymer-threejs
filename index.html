@@ -9,6 +9,17 @@
     <link rel="import" href="elements/three-elements.html">
   </head>
   <body >
+    <polymer-element name="TO-TO" extends="div" tabindex="0" >
+      <template><div style="background-color:red" on-click="onClicked">Custom element !BOBOBOBOBO</div> </template>
+      <script>
+        Polymer('TO-TO', {
+        onClicked:function()
+        {
+          alert("wow");
+        }
+        });
+      </script>
+    </polymer-element>
 
     <!-- Instantiate custom elements -->
     <three-viewer viewAngle="25" autoRotate showShadows id="viewer1" style="width:100%;height:100px;"></three-viewer>

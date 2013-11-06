@@ -62,6 +62,9 @@ Polymer('three-viewer', {
 			this.scene = new THREE.Scene();
 			this.clock = new THREE.Clock();
 			this.rootAssembly = new THREE.Object3D();
+
+      //
+      this.overlayScene = new THREE.Scene();
 		},
     enteredView: function() {
 			console.log("entered view");
@@ -119,8 +122,18 @@ Polymer('three-viewer', {
 			
 			this.convertColor(this.bg)
 			renderer.setClearColor( this.bg, 1 );
+      //renderer.domElement.style.zIndex = 4;
 			this.$.viewer.appendChild( renderer.domElement );
 			this.renderer = renderer;
+
+      //setup css renderer for overlays
+      this.overlayRenderer = new THREE.CSS3DRenderer();
+		  this.overlayRenderer.setSize( this.width, this.height );
+      this.overlayRenderer.domElement.style.position = 'absolute';
+      this.overlayRenderer.domElement.style.top = 0;
+      //this.overlayRenderer.domElement.style.zIndex = 3;
+      this.$.viewer.appendChild( this.overlayRenderer.domElement );
+      
 		},
 		setupLights: function()
 		{
@@ -258,6 +271,59 @@ Polymer('three-viewer', {
 	    //add axes
 	    this.axes = new THREE.LabeledAxes()
 	    this.scene.add(this.axes);
+
+   
+
+      function addDimention(size)
+      {
+        var element = document.createElement( 'div' );
+				element.style.width = 'auto';
+				element.style.height = 'auto';
+        element.style.fontSize = "130%";
+        element.style.textAlign = "center";
+        element.contentEditable = "true";
+				//element.style.background = new THREE.Color( Math.random() * 0xffffff ).getStyle();
+        element.style.backgroundColor = 'rgba(250,250,250,0.5)';
+
+        var sizeEl = document.createElement( 'div' );
+			  sizeEl.className = 'symbol';
+			  sizeEl.textContent = size.toFixed(2)+" mm";
+        sizeEl.contentEditable = "true";
+			  element.appendChild( sizeEl );
+
+        var wowzers = document.createElement("TO-TO");
+        element.appendChild(wowzers);
+
+				var object = new THREE.CSS3DObject( element );//CSS3DSprite
+				object.position.x = 0;
+				object.position.y = 0;
+				object.position.z = 0;
+				object.scale.x = 0.2;
+				object.scale.y = 0.2;
+				
+        return object;
+      }
+      var length = addDimention(20);
+      length.position.y = 40;//Math.random() * 200 - 100;
+      length.rotation.z = Math.PI;
+      this.overlayScene.add( length );
+
+      var width = addDimention(60);
+      width.position.x = 40;
+      width.rotation.z = Math.PI/2;
+      this.overlayScene.add( width );
+
+      var height = addDimention(80);
+      //height.rotation.x = Math.PI/2;
+      height.position.z = 20;
+      height.position.y = -40;
+      height.position.x = 0;
+      this.overlayScene.add( height );
+      
+        
+      //height.lookAt( this.camera.position );
+      //width.lookAt( this.camera.position );
+
 		},
 		setupControls: function()
 		{
@@ -350,6 +416,9 @@ Polymer('three-viewer', {
       {
         this.finalComposer.setSize(this.hRes, this.vRes)
       }
+
+      this.overlayRenderer.setSize( this.width, this.height );
+  
 		},
     fullScreenChangeHandler:function()
     {
@@ -383,6 +452,19 @@ Polymer('three-viewer', {
 			// delta = change in time since last call (in seconds)
 			var delta = this.clock.getDelta(); 
 			this.controls.update(); 
+
+      
+      for (var i = 1, l = this.overlayScene.children.length; i < l; i++) {
+        var object = this.overlayScene.children[i];
+        //object.billboard = true;
+        /*
+        object.lookAt(this.camera.position);
+        object.rotation.x = 3.14;
+        object.rotation.y += 3.14;
+        object.rotation.z = 3.14;*/
+
+    }
+
 			
 			if(this.showStats == true && this.$.stats !== undefined)
 			{
@@ -413,6 +495,8 @@ Polymer('three-viewer', {
       {
         this.renderer.render( this.scene, this.camera );
       }
+      
+      this.overlayRenderer.render( this.overlayScene, this.camera );
 
 		},
 		//utilities
@@ -625,8 +709,5 @@ Polymer('three-viewer', {
 					this.selectionHelper._unSelect();
         }
       }
-      
-
-
     }
 });
