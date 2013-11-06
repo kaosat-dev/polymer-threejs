@@ -1,11 +1,13 @@
- <polymer-element name="dummy-element" extends="div" tabindex="0" >
-      <template>
-        <div style="background-color:red" on-pointerup="onUp" on-pointerdown="onDown" on-pointermove="pointerMove" on-input="onInput" on-change="onInput" on-keyup="keyUp" on-keydown="keyDown" contentEditable = "true">
-        Custom element !BOBOBOBOBO
-      </div>
+ <polymer-element name="dummy-element" extends="div" tabindex="0" attribute="someValue">
+      <template style="background-color:blue" >
+        <div on-pointerup="onUp" on-pointerdown="onDown" on-pointermove="pointerMove" on-input="onInput" on-change="onInput" on-keyup="keyUp" on-keydown="keyDown" contentEditable = "true">
+        Custom element ! sir, some value ? <span style="background-color:yellow">{{someValue}}</span>
+        <input type="range" value={{someValue}}></input>
+        </div>
       </template>
       <script>
         Polymer('dummy-element', {
+        someValue:42,
         onUp:function(event)
         {
           console.log("on up wow");
