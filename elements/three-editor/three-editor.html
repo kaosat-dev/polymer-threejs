@@ -2,61 +2,56 @@
 <script src="./vendor/transform-controls.js"></script>
 <script src="./vendor/command-manager.js"></script>
 
-<polymer-element name="three-editor" extends="three-viewer" attributes="selected">
+<polymer-element name="three-editor" extends="three-viewer" attributes="selected" on-keyup="keyUp" on-keydown="keyDown">
   <template>
 		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
-		<div class="wrapper"> 
-			<div id="viewer" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp"></div>
-			<three-stats id="stats" show="{{showStats}}"></three-stats>
+		
+    <div id="viewWrapper" style="width:inherit;height:inherit;position:absolute;top:0px;" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp">
+      <div id="viewer" ></div>
+      <div id="viewerOverlay"></div>
+    </div>
+		<three-stats id="stats" show="{{showStats}}"></three-stats>
       
-      <div style="position:absolute;top:0px;right:0px;color:white">
-        <template id="toto" bind="{{ }}" >
-            <span>Amount: {{someValue}} bla , Twice Amount: {{ 2x: value }} </span>
-         </template>
-      </div>
-      
-      <div id="contextMenu" style="position:absolute;bottom:0px;right:0px;color:white">
-          <div on-tap="addShape">Add Shape</div>
-          <div on-tap="addAnnotation">Add Annotation</div>
+    <div id="contextMenu" style="position:absolute;bottom:0px;right:0px;color:white">
+        <div on-tap="addShape">Add Shape</div>
+        <div on-tap="addAnnotation">Add Annotation</div>
+    </div>
+
+    <div id="selectOverlay" style="position:absolute;bottom:0px;right:0px;color:white">
+      <template id="test" if="{{ selectedObject != null }}">
+        {{selectedObject.name}} P:{{selectedObject.position.x}},{{selectedObject.position.y}},{{selectedObject.position.z}}
+        <!--R:{{selectedObject.rotation.x}}  Twice Amount: {{ 2x: value }}
+        R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
+      </template>
+    </div>
+
+    <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px;text-align:center;">
+      <div>
+        <span titme="Undo" style="cursor:pointer" on-tap="undo" >U</span>
+        <span> History</span>
+        <span title="Redo" style="cursor:pointer" on-tap="redo" >R</span>
       </div>
 
-      <div id="selectOverlay" style="position:absolute;bottom:0px;right:0px;color:white">
-        <template id="test" if="{{ selectedObject != null }}">
-          {{selectedObject.name}} P:{{selectedObject.position.x}},{{selectedObject.position.y}},{{selectedObject.position.z}}
-          <!--R:{{selectedObject.rotation.x}}  Twice Amount: {{ 2x: value }}
-          R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
-        </template>
-      </div>
+      <!--in the future (once polymer's official release does not break webgl rendering with three.js
+      repeat="{{operation, operationIndex in undos}}"
+      {{operationIndex}} . 
 
-      <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px;text-align:center;">
-        <div>
-          <span titme="Undo" style="cursor:pointer" on-tap="undo" >U</span>
-          <span> History</span>
-          <span title="Redo" style="cursor:pointer" on-tap="redo" >R</span>
+      {{operation in undos}}
+      repeat="{{i in names.asMap().keys)}} //THIS DOES NOT WORK either...">
+      -->
+      <template repeat="{{operation in commandManager.undos}}">
+        <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyUndo">
+         {{operation.index}} {{operation.type}}
         </div>
+      </template>
+      <!--redos-->
+      <template repeat="{{operation in commandManager.redos}}">
+        <div style="border:red;display:block;background-color:rgba(219, 206, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyRedo">
+          {{operation.index}}  {{operation.type}}
+        </div>
+      </template>
 
-        <!--in the future (once polymer's official release does not break webgl rendering with three.js
-        repeat="{{operation, operationIndex in undos}}"
-        {{operationIndex}} . 
-
-        {{operation in undos}}
-        repeat="{{i in names.asMap().keys)}} //THIS DOES NOT WORK either...">
-        -->
-        <template repeat="{{operation in commandManager.undos}}">
-          <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyUndo">
-           {{operation.index}} {{operation.type}}
-          </div>
-        </template>
-        <!--redos-->
-        <template repeat="{{operation in commandManager.redos}}">
-          <div style="border:red;display:block;background-color:rgba(219, 206, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyRedo">
-            {{operation.index}}  {{operation.type}}
-          </div>
-        </template>
-
-      </div>
-
-		</div>
+    </div>
 	</template>
 	<script src="three-editor.js"></script>
 </polymer-element>

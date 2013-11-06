@@ -1,0 +1,41 @@
+ <polymer-element name="dummy-element" extends="div" tabindex="0" >
+      <template>
+        <div style="background-color:red" on-pointerup="onUp" on-pointerdown="onDown" on-pointermove="pointerMove" on-input="onInput" on-change="onInput" on-keyup="keyUp" on-keydown="keyDown" contentEditable = "true">
+        Custom element !BOBOBOBOBO
+      </div>
+      </template>
+      <script>
+        Polymer('dummy-element', {
+        onUp:function(event)
+        {
+          console.log("on up wow");
+          this.blockEvent(event);
+        },
+        onDown:function(event)
+        {
+          console.log("on down wow");
+          this.blockEvent(event);
+        },
+        onPointerMove:function(event)
+        {this.blockEvent(event);},
+        keyUp:function(event)
+        {console.log("on key up wow");
+          this.blockEvent(event);},
+        keyDown:function(event)
+        {
+        console.log("on key down wow");
+        this.blockEvent(event);},
+        blockEvent:function(event)
+        {
+          //event.preventDefault();
+          event.cancelBubble = true;
+          event.stopPropagation();
+        },
+        onInput:function()
+        {
+          console.log("input changed");
+        }
+        });
+      </script>
+</polymer-element>
+

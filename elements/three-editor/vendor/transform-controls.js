@@ -854,13 +854,10 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 		if ( scope.object === undefined || _dragging == true ) return;
 
-		//event.preventDefault();
+		event.preventDefault();
     
 		var pointer = event.touches ? event.touches[ 0 ] : event;
-
 		var intersect = intersectObjects( pointer, scope.gizmo[_mode].pickers.children );
-  
-    //console.log("transform controls hover",intersect,scope.gizmo[_mode].pickers);
 
 		if ( intersect ) {
 
@@ -1097,7 +1094,6 @@ THREE.TransformControls = function ( camera, domElement ) {
 
 	function onPointerUp( event ) {
 
-    //console.log("bla",scope.object,scope.axis);    
     //event dispatching
     if ( scope.object != undefined && scope.axis != undefined)
     {
@@ -1153,6 +1149,7 @@ THREE.TransformControls = function ( camera, domElement ) {
 		var rect = domElement.getBoundingClientRect();
 		var x = (pointer.clientX - rect.left) / rect.width;
 		var y = (pointer.clientY - rect.top) / rect.height;
+
 		pointerVector.set( ( x ) * 2 - 1, - ( y ) * 2 + 1, 0.5 );
 
 		projector.unprojectVector( pointerVector, camera );

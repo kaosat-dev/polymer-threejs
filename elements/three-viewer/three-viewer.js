@@ -120,20 +120,33 @@ Polymer('three-viewer', {
 			renderer.shadowMapSoft = true;
 			renderer.shadowMapType = THREE.PCFShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
 			
-			this.convertColor(this.bg)
+			this.convertColor(this.bg);
 			renderer.setClearColor( this.bg, 1 );
-      //renderer.domElement.style.zIndex = 4;
 			this.$.viewer.appendChild( renderer.domElement );
 			this.renderer = renderer;
+
+      this.renderer.domElement.style.position = 'absolute';
+      this.renderer.domElement.style.top = 0;
+      //this.renderer.domElement.style.zIndex = 0;
+      /*this.renderer.domElement.tabindex=1;
+      
+      this.$.viewer.style.zIndex =0;
+      this.$.viewer.style.position = 'absolute';
+      this.$.viewer.style.top = 0;
+      this.$.viewer.style.width = '640px';
+      this.$.viewer.style.height = '480px';*/
+
 
       //setup css renderer for overlays
       this.overlayRenderer = new THREE.CSS3DRenderer();
 		  this.overlayRenderer.setSize( this.width, this.height );
+
       this.overlayRenderer.domElement.style.position = 'absolute';
       this.overlayRenderer.domElement.style.top = 0;
-      //this.overlayRenderer.domElement.style.zIndex = 3;
-      this.$.viewer.appendChild( this.overlayRenderer.domElement );
-      
+      //this.overlayRenderer.domElement.style.zIndex = 1;
+
+      this.$.viewerOverlay.appendChild( this.overlayRenderer.domElement );
+
 		},
 		setupLights: function()
 		{
@@ -272,8 +285,6 @@ Polymer('three-viewer', {
 	    this.axes = new THREE.LabeledAxes()
 	    this.scene.add(this.axes);
 
-   
-
       function addDimention(size)
       {
         var element = document.createElement( 'div' );
@@ -281,18 +292,18 @@ Polymer('three-viewer', {
 				element.style.height = 'auto';
         element.style.fontSize = "130%";
         element.style.textAlign = "center";
-        element.contentEditable = "true";
+        //element.contentEditable = "true";
 				//element.style.background = new THREE.Color( Math.random() * 0xffffff ).getStyle();
         element.style.backgroundColor = 'rgba(250,250,250,0.5)';
 
         var sizeEl = document.createElement( 'div' );
 			  sizeEl.className = 'symbol';
 			  sizeEl.textContent = size.toFixed(2)+" mm";
-        sizeEl.contentEditable = "true";
+        //sizeEl.contentEditable = "true";
 			  element.appendChild( sizeEl );
 
-        var wowzers = document.createElement("TO-TO");
-        element.appendChild(wowzers);
+        //var wowzers = document.createElement("dummy-element");
+        //element.appendChild(wowzers);
 
 				var object = new THREE.CSS3DObject( element );//CSS3DSprite
 				object.position.x = 0;
@@ -303,6 +314,8 @@ Polymer('three-viewer', {
 				
         return object;
       }
+
+      /*
       var length = addDimention(20);
       length.position.y = 40;//Math.random() * 200 - 100;
       length.rotation.z = Math.PI;
@@ -318,16 +331,11 @@ Polymer('three-viewer', {
       height.position.z = 20;
       height.position.y = -40;
       height.position.x = 0;
-      this.overlayScene.add( height );
-      
-        
-      //height.lookAt( this.camera.position );
-      //width.lookAt( this.camera.position );
-
+      this.overlayScene.add( height );*/
 		},
 		setupControls: function()
 		{
-			this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement, this.cameraUp );
+			this.controls = new THREE.OrbitControls( this.camera, this.$.viewerOverlay, this.cameraUp );
 			this.controls.userPanSpeed = 8.0;
 			this.controls.userZoomSpeed = 2.0;
     	this.controls.userRotateSpeed = 2.0;
@@ -645,9 +653,14 @@ Polymer('three-viewer', {
 
       this._noMove = false;
     },
+    pointerDownOverlay:function(event)
+    {
+        console.log("pointer down overlay");
+        return true;
+    },
     pointerDown:function(event)
     {
-      //console.log("pointer down");
+      console.log("pointer down",event.impl);
       var x = event.impl.offsetX;
       var y = event.impl.offsetY;
 
@@ -658,8 +671,15 @@ Polymer('three-viewer', {
 			//set focus so keyboard binding works
 			if( document.activeElement != this.impl)
 			{
+        //var focusEl= event.impl.srcElement.parentNode;
 				this.focus();
       }
+
+      /*
+      this.addEventListener( "keydown", function(){console.log("keyDown in root");}, false );
+      //this.$.viewWrapper.addEventListener( "keydown", function(){console.log("keyDown in viewWrapper");}, false );
+      this.$.viewer.addEventListener( "keydown", function(){console.log("keyDown in viewer");}, false );
+      this.$.viewerOverlay.addEventListener( "keydown", function(){console.log("keyDown in vieweroverlay");}, false );*/
 
       /*
       if(this.shiftPressed != undefined)
@@ -679,6 +699,7 @@ Polymer('three-viewer', {
     },
     pointerUp:function(event)
     {
+      console.log("pointerUp");
       var x = event.impl.offsetX;
       var y = event.impl.offsetY;
 

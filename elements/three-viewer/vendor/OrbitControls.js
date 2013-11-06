@@ -231,7 +231,7 @@ THREE.OrbitControls = function ( object, domElement, upVector ) {
 
         if ( scope.enabled === false ) return;
         if ( scope.userRotate === false ) return;
-        event.preventDefault();
+        //event.preventDefault();
 
         if ( state === STATE.NONE )
         {

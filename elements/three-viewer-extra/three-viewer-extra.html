@@ -7,7 +7,8 @@
 	<template>
 		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
 		<div id="wrapper" class="wrapper" touch-action="none" > 
-			<div id="viewer" on-keydown="keyDown"  on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp" ></div>
+			<div style="z-index:1" id="viewer" on-keydown="keyDown"  on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp" ></div>
+      <div style="z-index:0" id="viewerOverlay" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp"></div>
 
 			<three-controls show="{{showControls}}" autoRotate="{{autoRotate}}" showStats="{{showStats}}" showGrid="{{showGrid}}" showShadows="{{showShadows}}" showAxes="{{showAxes}}" projection="{{projection}}" orientation="{{orientation}}" on-capture-request="captureRequest" fullScreen="{{fullScreen}}"></three-controls>
 

@@ -10,7 +10,6 @@ Polymer('three-editor', {
   {
     this.super();
 
-    console.log("this.$.selectOverlay",this.$.toto);
     var delegate = {
       getBinding: function(model, path, name, node) {
         //console.log("mlkmlkmlkl",path,name,node);
@@ -38,18 +37,17 @@ Polymer('three-editor', {
         console.log("mlkmlkmlkl",template, model);
       }*/
     };
-    this.$.toto.bindingDelegate = delegate;
+    //this.$.toto.bindingDelegate = delegate;
   },
   enteredView:function()
   {
     this.super();
     console.log("editor entered view");
     //if mousedown PLUS move NOT over object : rotate/pan, do not deselect current obect
-    this.transformControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
+    this.transformControls = new THREE.TransformControls(this.camera, this.$.viewWrapper);
     
     function onControlsChange(event)
     {
-        //console.log("pouet");
         this.controls.enabled = true;
         if(this.transformControls.axis != undefined)
         {
@@ -260,7 +258,7 @@ Polymer('three-editor', {
         {
           var parent = pickeds[0].object;
           parent.add( mesh );
-          parent.material.wireframe = true;
+          //parent.material.wireframe = true;
 
           console.log("parent",parent,"current",mesh);
 

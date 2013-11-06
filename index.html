@@ -9,22 +9,10 @@
     <link rel="import" href="elements/three-elements.html">
   </head>
   <body >
-    <polymer-element name="TO-TO" extends="div" tabindex="0" >
-      <template><div style="background-color:red" on-click="onClicked">Custom element !BOBOBOBOBO</div> </template>
-      <script>
-        Polymer('TO-TO', {
-        onClicked:function()
-        {
-          alert("wow");
-        }
-        });
-      </script>
-    </polymer-element>
-
     <!-- Instantiate custom elements -->
     <three-viewer viewAngle="25" autoRotate showShadows id="viewer1" style="width:100%;height:100px;"></three-viewer>
     <three-viewer-extra viewAngle="45" showControls postProcess style="left:680px;top:200px;border: 1px solid blue;width:640px;height:480px"></three-viewer-extra>
-    <three-editor showShadows showAxes=false cameraUp=[0,0,1] fullScreen style="left:20px;top:200px;border: 1px solid red;width:640px;height:480px;background-color:#393939 "> </three-editor>
+    <three-editor showShadows showAxes=false cameraUp=[0,0,1] fullScreen showGrid=false style="left:20px;top:200px;border: 1px solid red;width:640px;height:480px;background-color:#393939 "> </three-editor>
   <!--background-color:#c0ff00-->
 
 	<script src="elements/three-viewer/vendor/three.js"></script>
@@ -116,6 +104,8 @@
       loader.addEventListener( 'load', function ( event ) {
 							var material = new THREE.MeshPhongMaterial( { ambient: 0xddddcc, color: 0xddddcc, specular: 0x111111, shininess: 2 } );
               var material = new THREE.MeshPhongMaterial( { color: 0xffc700, specular: 0xffffff, shininess: 6, wrapAround:true} );
+
+              //material.blending  = THREE.NoBlending;
               //color: 0xffdddd,specular: '#a9fcff'
               var geometry = event.content;
 							/*geometry.computeBoundingBox ();
@@ -132,8 +122,6 @@
 							mesh.name = "pr2_head_tilt";
               //mesh.position.set( 0.136, - 0.37, - 0.6 );
               //mesh.rotation.set( - Math.PI / 2, 0.3, 0 );
-              
-
               mesh.castShadow = true;
               mesh.receiveShadow = true;
 
