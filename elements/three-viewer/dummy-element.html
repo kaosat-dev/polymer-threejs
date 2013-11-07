@@ -1,4 +1,64 @@
- <polymer-element name="dummy-element" extends="div" tabindex="0" attribute="someValue">
+<polymer-element name="sub-element" attributes="nickname cookies">
+  <template>
+    Child {{nickname}} wants {{cookies}} cookies.
+    <div>
+      <input type="range" value ={{cookies}} />
+      <template if="{{cookies > 70 }}">
+        That is a LOT of cookies , my son !
+      </template>
+      <template if="{{cookies < 1 }}">
+        No cookies, are you sure ?
+      </template>
+    </div>
+  </template>
+  <script>Polymer('sub-element',{
+  nickname: "bar",
+  cookies:1
+  });
+  </script>
+</polymer-element>
+
+
+<polymer-element name="material-editor" attributes="wireframe opacity selection">
+  <template >
+    <div> Target name : {{selection}}</div>
+    <div>Opacity: {{opacity}} <input type="range" value="{{opacity}}" step="0.1" min="0" max="1" on-pointermove="onMove" on-pointerup="onUp" on-pointerdown="onDown"/></div>
+    <div>Wireframe: <input type="checkbox" checked="{{wireframe}}" on-pointermove="onMove" on-pointerup="onUp" on-pointerdown="onDown"/></div>
+  </template>
+  <script>
+    Polymer('material-editor', {
+      opacity: 1,
+      wireframe: false,
+      test:50,
+      selection:"",
+      //prevent event bubbling
+     onUp:function(event)
+      {
+        this.blockEvent(event);
+      },
+      onDown:function(event)
+      {
+        this.blockEvent(event);
+      },
+      onMove:function(event)
+      {
+        this.blockEvent(event);
+      },
+     blockEvent:function(event)
+      {
+        //event.preventDefault();
+        event.cancelBubble = true;
+        event.stopPropagation();
+      },
+      selectionChanged:function()
+      {
+        console.log("selection", this.selection);
+      }
+   });
+  </script>
+</polymer-element>
+
+<polymer-element name="dummy-element" extends="div" tabindex="0" attribute="someValue">
       <template style="background-color:blue" >
         <div on-pointerup="onUp" on-pointerdown="onDown" on-pointermove="pointerMove" on-input="onInput" on-change="onInput" on-keyup="keyUp" on-keydown="keyDown" contentEditable = "true">
         Custom element ! sir, some value ? <span style="background-color:yellow">{{someValue}}</span>

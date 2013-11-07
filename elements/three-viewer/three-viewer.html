@@ -31,9 +31,6 @@ attributes="showStats showShadows showGrid showAxes viewAngle autoRotate project
 			<div id="viewer" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown"  on-keyup="keyUp" on-keydown="keyDown" ></div>
       <div id="viewerOverlay" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" ></div>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
-
-      <div id="innerBindingTestEl" style="position:absolute;bottom:0px;right:50px">{{innerBindingTest}}</div>
-      <div id="innerBindingFoo" style="position:absolute;bottom:0px;right:50px">Here</div>
 		</div>
 	</template>
 	<script src="three-viewer.js"></script>

@@ -78,6 +78,32 @@ Polymer('three-viewer', {
       if (this.mozRequestFullScreen) document.addEventListener("mozfullscreenchange", this.fullScreenChangeHandler.bind(this), false);
       if (this.webkitRequestFullScreen) document.addEventListener("webkitfullscreenchange", this.fullScreenChangeHandler.bind(this), false);
 
+      
+      //this._innerOverlayWidthEl.bind('wireframe', this, 'autoRotate');
+      //this._innerOverlayWidthEl.bind('opacity', this.selectedObject, 'material.opacity');
+      this._innerOverlayWidthEl.bind('opacity', this, 'selectedObject.material.opacity');
+      this._innerOverlayWidthEl.bind('wireframe', this, 'selectedObject.material.wireframe');
+      this._innerOverlayWidthEl.bind('selection', this, 'selectedObject.name');
+
+      /*this._innerOverlayWidthEl.bind('test', this.selectedObject, 'position.x');
+      console.log("test",  this._innerOverlayWidthEl);
+      this._innerOverlayWidthEl.bind('target', this, 'selectedObject');*/
+
+      //works
+      /*
+      var testSubNode = document.createElement('sub-element');
+      this.$.dummyOverlayTest.appendChild(testSubNode);
+      testSubNode.bind('cookies', this, 'innerBindingTest');
+      //testSubNode.setAttribute('wireframe',false);
+      
+      var testSubNode = document.createElement('material-editor');
+      this.$.dummyOverlayTest.appendChild(testSubNode);
+      testSubNode.bind('wireframe', this, 'autoRotate');
+      testSubNode.bind('opacity', this, 'innerBindingTest');*/
+      //testSubNode.setAttribute('wireframe',false);
+
+
+
 		},
 		ready: function() {
 			console.log("ready");
@@ -305,7 +331,7 @@ Polymer('three-viewer', {
         //sizeEl.contentEditable = "true";
 			  element.appendChild( sizeEl );
 
-        var wowzers = document.createElement("dummy-element");
+        var wowzers = document.createElement("material-editor"); //document.createElement("dummy-element");
         element.appendChild(wowzers);
         wowzers.style.backgroundColor = color;
 
@@ -319,10 +345,10 @@ Polymer('three-viewer', {
         return [object,wowzers];
       }
 
-      var length = addDimention(20)[0];
+      /*var length = addDimention(20)[0];
       length.position.y = 40;//Math.random() * 200 - 100;
       length.rotation.z = Math.PI;
-      this.overlayScene.add( length );
+      this.overlayScene.add( length );*/
 
       var widthStuff = addDimention(60);
       var width = widthStuff[0];
@@ -330,20 +356,19 @@ Polymer('three-viewer', {
       width.rotation.z = Math.PI/2;
       this.overlayScene.add( width );
 
+      /*
       var height = addDimention(80,"orange")[0];
       //height.rotation.x = Math.PI/2;
       height.position.z = 20;
       height.position.y = -40;
       height.position.x = 0;
-      this.overlayScene.add( height );
+      this.overlayScene.add( height );*/
+      
       
       this._innerOverlayWidthEl = widthStuff[1];
-      this._innerOverlayWidth = width;
-
 
       //this.$.innerBindingTestEl.bind('textContent',this._innerOverlayWidthEl.someValue,'someValue');
       //this.$.innerBindingFoo.bind('textContent',this._innerOverlayWidthEl.someValue,'someValue');
-      this._innerOverlayWidthEl.someValue = this.innerBindingTest;
 
 		},
 		setupControls: function()
@@ -632,12 +657,17 @@ Polymer('three-viewer', {
 
        if(this.selectedObject != null)
        {
-          console.log("blah");
+          var materialEditor = this._innerOverlayWidthEl; 
+          //this.$.viewer.appendChild(materialEditor);  
+          //testSubNode.setAttribute("nickname","bob");
+          //, transparent: true,  opacity: 0.8,
+          //console.log("wireframe",this.selectedObject.material.wireframe);
+          /*
           if(this.selectedObject.geometry.boundingBox == undefined)
           {this.selectedObject.geometry.computeBoundingBox();}
           var boundingBox = this.selectedObject.geometry.boundingBox.clone();
           var width = boundingBox.max.x - boundingBox.min.x;
-          this._innerOverlayWidthEl.someValue = width;
+          this._innerOverlayWidthEl.someValue = width;*/
           //
           //textNode.bind('textContent', obj, 'path.to.value');
     
