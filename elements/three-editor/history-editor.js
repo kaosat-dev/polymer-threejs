@@ -25,7 +25,6 @@ Polymer('history-editor', {
     this.commandManager.redoMultiple(howMany);
   },
   //event handlers
-  //TODO: move this, and the html parts to a different web component
   historyUndo:function(event, detail, sender)
   {
     var model = sender.templateInstance_.model;

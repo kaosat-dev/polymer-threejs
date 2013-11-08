@@ -2,9 +2,10 @@
 
 <polymer-element name="history-editor">
   <template>
-    <div id="historyViewer" style="position:absolute;top:0px;left:0px;color:white;width:200px;text-align:center;">
+    <link rel="stylesheet" type="text/css" href="history-editor.css">
+    <div id="historyViewer" >
         <div>
-          <span titme="Undo" style="cursor:pointer" on-tap="undo" >U</span>
+          <span title="Undo" style="cursor:pointer" on-tap="undo" >U</span>
           <span> History</span>
           <span title="Redo" style="cursor:pointer" on-tap="redo" >R</span>
         </div>
@@ -16,15 +17,15 @@
         {{operation in undos}}
         repeat="{{i in names.asMap().keys)}} //THIS DOES NOT WORK either...">
         -->
-        <template repeat="{{operation in commandManager.undos}}">
-          <div style="border:red;display:block;background-color:rgba(99, 148, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyUndo">
-           {{operation.index}} {{operation.type}}
+        <template repeat="{{operation in commandManager.undos}}" >
+          <div class="undosItem" on-tap="historyUndo">
+           {{operation.index}} {{operation.type}} {{operation.target.name}}
           </div>
         </template>
         <!--redos-->
         <template repeat="{{operation in commandManager.redos}}">
-          <div style="border:red;display:block;background-color:rgba(219, 206, 201, 0.28);margin-top: 4px;cursor:pointer" on-tap="historyRedo">
-            {{operation.index}}  {{operation.type}}
+          <div class="redosItem" on-tap="historyRedo">
+            {{operation.index}}  {{operation.type}} {{operation.target.name}}
           </div>
         </template>
     </div>

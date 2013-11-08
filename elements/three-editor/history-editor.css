@@ -1,0 +1,45 @@
+@host {
+	* {
+		opacity: 1;
+    transition: opacity 300ms;
+    position: absolute;
+    top:0px;
+
+    color:white;
+		
+		/*make things unselectable, cross browser*/
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	*:unresolved {
+	    opacity: 0;
+	 }
+}
+
+#historyViewer{
+    position:absolute;
+    top:0px;
+    left:0px;
+    color:white;
+    width:200px;
+    text-align:center;
+  }
+  .undosItem{
+    border:red;
+    display:block;
+    background-color:rgba(99, 148, 201, 0.28);
+    margin-top: 4px;
+    cursor:pointer;
+  }
+  .redosItem{
+    border:red;
+    display:block;
+    background-color:rgba(219, 206, 201, 0.28);
+    margin-top: 4px;
+    cursor:pointer;
+  }
