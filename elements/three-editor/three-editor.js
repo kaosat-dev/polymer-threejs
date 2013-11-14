@@ -1,4 +1,40 @@
 Polymer('three-editor', {
+
+  created:function()
+  {
+    this.super();
+
+    //setup template filters
+    function toFixed(fractions) {
+      return {
+        toDOM: function(value) {
+          console.log("yipee");
+          return Number(value).toFixed(fractions);
+        }
+      };
+    }
+
+    //does not get updated correctly : path/object.observe issue?
+    function rVector(fractions) {
+      return {
+        toDOM: function(value) {
+          if(value != null && value !=undefined)
+          {
+            console.log("blah");
+            return value;
+            return "x:"+value.x.toFixed(fractions)+" y:"+value.y.toFixed(fractions)+" z:"+value.y.toFixed(fractions);
+          }
+          else{console.log("hn"); return "";}
+        }
+      };
+    }
+
+
+    PolymerExpressions.filters.toFixed = toFixed;
+    PolymerExpressions.filters.rVector = rVector;
+
+
+  },
   enteredView:function()
   {
     this.super();

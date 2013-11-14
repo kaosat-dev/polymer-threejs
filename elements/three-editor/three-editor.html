@@ -7,6 +7,14 @@
 <polymer-element name="three-editor" extends="three-viewer" attributes="selected">
   <template>
 		<link rel="stylesheet" type="text/css" href="../three-viewer/three-viewer.css">
+    <style>
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+          /* display: none; <- Crashes Chrome on hover */
+          -webkit-appearance: none;
+          margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+      }
+    </style>
 		<div class="wrapper"> 
 			<div id="viewer" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp"></div>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
@@ -18,7 +26,11 @@
 
       <div id="selectOverlay" style="position:absolute;bottom:0px;right:0px;color:white">
         <template id="test" if="{{ selectedObject != null }}">
-          {{selectedObject.name}} P:{{selectedObject.position.x}},{{selectedObject.position.y}},{{selectedObject.position.z}}
+          {{selectedObject.name}} P: 
+          <input type="number" value="{{ selectedObject.position.x | toFixed(2) }}" style="width: 3em;border: none"/>
+          <input type="number" value="{{ selectedObject.position.y | toFixed(2) }}" style="width: 3em;border: none"/>
+          <input type="number" value="{{ selectedObject.position.z | toFixed(2) }}" style="width: 3em;border: none"/>
+
           <!--R:{{selectedObject.rotation.x}}  Twice Amount: {{ 2x: value }}
           R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
         </template>
