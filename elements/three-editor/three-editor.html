@@ -19,24 +19,28 @@
 			<div id="viewer" touch-action="none" on-pointermove="pointerMove" on-pointerdown="pointerDown" on-pointerup="pointerUp"></div>
 			<three-stats id="stats" show="{{showStats}}"></three-stats>
             
-      <div id="contextMenu" style="position:absolute;bottom:0px;right:0px;color:white">
+      <div id="contextMenu" style="position:absolute;top:0px;right:0px;color:white">
           <div on-tap="addShape">Add Shape</div>
           <div on-tap="addAnnotation">Add Annotation</div>
       </div>
 
       <div id="selectOverlay" style="position:absolute;bottom:0px;right:0px;color:white">
         <template id="test" if="{{ selectedObject != null }}">
-          {{selectedObject.name}} P: 
+          {{selectedObject.name}}
+          P: 
           <input type="number" value="{{ selectedObject.position.x | toFixed(2) }}" style="width: 3em;border: none"/>
           <input type="number" value="{{ selectedObject.position.y | toFixed(2) }}" style="width: 3em;border: none"/>
           <input type="number" value="{{ selectedObject.position.z | toFixed(2) }}" style="width: 3em;border: none"/>
-
-          <!--R:{{selectedObject.rotation.x}}  Twice Amount: {{ 2x: value }}
-          R:{{selectedObject.rotation.x}},{{selectedObject.rotation.y}},{{selectedObject.rotation.z}}.toFixed(2)-->
+          R:
+          <input type="number" value="{{ selectedObject.rotation.x | toFixed(2) }}" style="width: 3em;border: none"/>
+          <input type="number" value="{{ selectedObject.rotation.y | toFixed(2) }}" style="width: 3em;border: none"/>
+          <input type="number" value="{{ selectedObject.rotation.z | toFixed(2) }}" style="width: 3em;border: none"/>
         </template>
       </div>
 
       <history-editor id="commandManager"></history-editor>
+      
+    
 
 		</div>
 	</template>

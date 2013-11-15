@@ -21,9 +21,15 @@
           <div class="undosItem" on-tap="historyUndo">
            {{operation.index}} {{operation.type}} {{operation.target.name}}
           </div>
+          <template if="{{operation.index == commandManager.undos.length-1}}">
+              <div style="background-color:red;width:100%; height:5px"> </div>
+          </template>
         </template>
         <!--redos-->
         <template repeat="{{operation in commandManager.redos}}">
+          <template if="{{operation.index == 0}}">
+              <div style="background-color:red;width:100%; height:5px"> </div>
+          </template>
           <div class="redosItem" on-tap="historyRedo">
             {{operation.index}}  {{operation.type}} {{operation.target.name}}
           </div>

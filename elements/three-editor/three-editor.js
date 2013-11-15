@@ -8,7 +8,6 @@ Polymer('three-editor', {
     function toFixed(fractions) {
       return {
         toDOM: function(value) {
-          console.log("yipee");
           return Number(value).toFixed(fractions);
         }
       };
@@ -20,11 +19,10 @@ Polymer('three-editor', {
         toDOM: function(value) {
           if(value != null && value !=undefined)
           {
-            console.log("blah");
             return value;
             return "x:"+value.x.toFixed(fractions)+" y:"+value.y.toFixed(fractions)+" z:"+value.y.toFixed(fractions);
           }
-          else{console.log("hn"); return "";}
+          else{ return "";}
         }
       };
     }
